@@ -3,6 +3,7 @@ import "../global.css"
 import { useEffect } from "react";
 import { useFonts } from "expo-font";
 import { StatusBar } from 'expo-status-bar';
+import SafeScreen from "../components/SafeScreen";
 
 
 export default function RootLayout() {
@@ -21,11 +22,10 @@ export default function RootLayout() {
   }, [fontsLoaded]);
 
   if (!fontsLoaded) return null;
-  return (<>
-
-    <StatusBar style="dark" translucent />
-    <Slot />
-    {/* <Stack /> */}
-  </>
+  return (
+    <SafeScreen>
+      <StatusBar style="dark" translucent  />
+      <Slot />
+    </SafeScreen>
   );
 }

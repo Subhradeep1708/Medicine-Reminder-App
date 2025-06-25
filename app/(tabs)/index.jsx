@@ -1,12 +1,23 @@
-import { Text, View } from "react-native";
+import { ScrollView, Text, View } from "react-native";
 import "../../global.css"
 import CircularProgressBar from '@/components/CircularProgressBar'
-export default function Index() {
+import { Ionicons } from '@expo/vector-icons';
+
+const Home = () => {
   return (
-    <View
-      className="flex-1 justify-center items-center bg-slate-900"
-    >
-      <CircularProgressBar />
-    </View>
+    <>
+      <ScrollView>
+        <View className="flex-1 items-center bg-green-500 p-2 rounded-b-[40]">
+          <View className=" w-full flex-row justify-between p-4" >
+            <Text className=" font-spaceSemiBold text-2xl text-white">Daily Progress</Text>
+            <Ionicons name="notifications-outline" size={30} color={"white"} />
+          </View>
+          <View className="mt-4 ">
+            <CircularProgressBar />
+          </View>
+        </View>
+      </ScrollView>
+    </>
   );
 }
+export default Home;
