@@ -1,11 +1,12 @@
-import { SplashScreen, Stack, Slot } from "expo-router";
+import { SplashScreen, Slot } from "expo-router";
 import "../global.css"
 import { useEffect } from "react";
 import { useFonts } from "expo-font";
 import { StatusBar } from 'expo-status-bar';
 import SafeScreen from "../components/SafeScreen";
-
-
+import { ClerkProvider } from '@clerk/clerk-expo'
+import { tokenCache } from '@clerk/clerk-expo/token-cache'
+import { PaperProvider } from 'react-native-paper';
 export default function RootLayout() {
   const [fontsLoaded] = useFonts({
     "SpaceGrotesk-Regular": require("../assets/fonts/SpaceGrotesk-Regular.ttf"),
@@ -23,9 +24,13 @@ export default function RootLayout() {
 
   if (!fontsLoaded) return null;
   return (
-    <SafeScreen>
-      <StatusBar style="dark" translucent  />
-      <Slot />
-    </SafeScreen>
+    <PaperProvider>
+      <ClerkProvider>
+        <SafeScreen tokenCache={tokenCache}>
+          <StatusBar style="dark" translucent />
+          <Slot />
+        </SafeScreen>
+      </ClerkProvider>
+    </PaperProvider>
   );
 }
