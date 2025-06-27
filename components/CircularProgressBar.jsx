@@ -4,25 +4,28 @@ import { View } from 'react-native'
 const CircularProgressBar = () => {
     let val = 5;
     return (
-        <View className="font-spaceSemiBold p-8 pb-12 ">
+        <View className="font-spaceSemiBold justify-center p-8 pb-12 ">
             <CircularProgress
-                value={73}
+                value={59}
                 progressValueStyle={{
-                    fontSize: 28,}}
+                    fontSize: 43,
+                    fontFamily:'SpaceGrotesk-Regular'
+                }}
                 inActiveStrokeColor={'#e5ebe8'}
                 inActiveStrokeOpacity={0.2}
                 progressValueColor={'#fff'}
                 valueSuffix={'%'}
-                duration={2000}
-                radius={98}
+                duration={4000}
+                radius={99}
                 activeStrokeColor={'#f1f1f1de'}
                 // activeStrokeSecondaryColor={'#eaefec'}
-                activeStrokeWidth={10}
+                activeStrokeWidth={13}
+                inActiveStrokeWidth={13}
                 // subtitle={`Loading...`}
                 title={`${val} of 10 doses`}
-                titleFontSize={15}
+                titleFontSize={16}
                 titleStyle={{
-                    // fontSize: 20,
+                    fontFamily: 'SpaceGrotesk-SemiBold'
                 }}
                 rotation={-90}
             />

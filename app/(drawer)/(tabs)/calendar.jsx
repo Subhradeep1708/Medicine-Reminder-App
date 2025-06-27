@@ -1,6 +1,6 @@
 import { View, Text } from 'react-native'
 
-const calender = () => {
+const calendar = () => {
     return (
         <View>
             <Text>Calenderasdiusadg</Text>
@@ -8,4 +8,4 @@ const calender = () => {
     )
 }
 
-export default calender
+export default calendar

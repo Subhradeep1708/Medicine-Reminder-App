@@ -1,8 +1,9 @@
 import { Ionicons } from '@expo/vector-icons'
 import { LinearGradient } from 'expo-linear-gradient'
+import { router } from 'expo-router'
 import { View, Text, TouchableOpacity } from 'react-native'
 
-const QuickActionCard = ({ iconName, bgColorFrom, bgColorTo, text }) => {
+const QuickActionCard = ({ iconName, bgColorFrom, bgColorTo, text, route }) => {
     return (
 
 
@@ -25,10 +26,11 @@ const QuickActionCard = ({ iconName, bgColorFrom, bgColorTo, text }) => {
             }}
         >
             <TouchableOpacity
-                onPress={() => console.log('Add Medication Pressed')}
+                onPress={() => router.navigate(route)}
                 // className="flex-1"
                 className=""
                 activeOpacity={0.6}
+
             >
                 <View className=" gap-x-1" >
                     <View className=" rounded-lg p-1 h-12 w-12 items-center justify-center mx-auto"

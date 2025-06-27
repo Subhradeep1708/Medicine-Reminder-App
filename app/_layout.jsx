@@ -24,13 +24,14 @@ export default function RootLayout() {
 
   if (!fontsLoaded) return null;
   return (
-    <PaperProvider>
-      <ClerkProvider>
-        <SafeScreen tokenCache={tokenCache}>
-          <StatusBar style="dark" translucent />
-          <Slot />
-        </SafeScreen>
-      </ClerkProvider>
-    </PaperProvider>
+      <PaperProvider>
+        <ClerkProvider tokenCache={tokenCache}>
+          <SafeScreen >
+            <StatusBar style="dark" translucent />
+            <Slot />
+          </SafeScreen>
+        </ClerkProvider>
+      </PaperProvider>
+    
   );
 }
