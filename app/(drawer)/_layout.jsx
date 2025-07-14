@@ -16,21 +16,25 @@ export default function DrawerLayout() {
             >
                 <Drawer.Screen
                     name="(tabs)"
+
                     options={{
                         drawerLabel: 'Home',
                         drawerIcon: ({ color, size }) => <Ionicons name="home-outline" size={size} color={color} />,
+
                     }}
+
                 />
                 {/* <Drawer.Screen
-                    name="about"
+                    name="addmedication"
                     options={{
-                        drawerLabel: 'About',
+                        drawerLabel: 'Add Meds',
                         drawerIcon: ({ color, size }) => (
-                            <Ionicons name="information" size={size} color={color} />
+                            <Ionicons name="medical-outline" size={size} color={color} />
                         ),
+
                     }}
-                />
-                <Drawer.Screen
+                /> */}
+                {/*<Drawer.Screen
                     name="help"
                     options={{
                         drawerLabel: 'Help',

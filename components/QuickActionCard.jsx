@@ -3,45 +3,44 @@ import { LinearGradient } from 'expo-linear-gradient'
 import { router } from 'expo-router'
 import { View, Text, TouchableOpacity } from 'react-native'
 
-const QuickActionCard = ({ iconName, bgColorFrom, bgColorTo, text, route }) => {
+const QuickActionCard = ({ iconName, text, route, iconBg = "bg-red-400" }) => {
     return (
 
 
-        <LinearGradient
-            colors={[`${bgColorFrom}`, `${bgColorTo}`]}
-            // className='rounded-lg shadow-lg shadow-gray-500/50'
-            style={{
-                borderRadius: 10,
-                shadowColor: '#000',
-                shadowOffset: {
-                    width: 0,
-                    height: 2,
-                },
-                shadowOpacity: 0.25,
-                shadowRadius: 3.84,
-                elevation: 5,
-                width: 170,
-                height: 100,
-                justifyContent: 'center',
-            }}
-        >
+        // <LinearGradient
+        //     colors={[`${bgColorFrom}`, `${bgColorTo}`]}
+        //     // style={{
+        //     //     // borderRadius: 10,
+        //     //     shadowColor: '#000',
+        //     //     shadowOffset: {
+        //     //         width: 0,
+        //     //         height: 2,
+        //     //     },
+        //     //     shadowOpacity: 0.25,
+        //     //     shadowRadius: 3.84,
+        //     //     elevation: 5,
+        //     //     // width: 170,
+        //     //     // height: 100,
+        //     //     justifyContent: 'center',
+        //     // }}
+        //     // className='border-8 border-white rounded-full  basis-1/4'
+        // >
             <TouchableOpacity
-                onPress={() => router.navigate(route)}
-                // className="flex-1"
-                className=""
+                onPress={() => router.push(route)}
+                className="px-4 rounded-2xl bg-white mx-2 py-4 "
                 activeOpacity={0.6}
 
             >
-                <View className=" gap-x-1" >
-                    <View className=" rounded-lg p-1 h-12 w-12 items-center justify-center mx-auto"
-                        style={{ backgroundColor: 'rgba(255, 255, 255, 0.3)' }}
+                <View className="" >
+                    <View className={`rounded-full p-2 size-12 items-center justify-center mx-auto ${iconBg}`}
+                    // style={{ backgroundColor: 'rgba(255, 255, 255, 0.3)' }}
                     >
-                        <Ionicons name={iconName} size={30} color={'white'} />
+                        <Ionicons name={iconName} size={24} color={'white'} />
                     </View>
-                    <Text className="text-center text-white font-spaceSemiBold text-base mt-2">{text}</Text>
+                    <Text className="text-center w-24 text-gray-800 font-spaceBold text-base mt-2 text-wrap">{text}</Text>
                 </View>
             </TouchableOpacity>
-        </LinearGradient>
+        // </LinearGradient>
 
     )
 }

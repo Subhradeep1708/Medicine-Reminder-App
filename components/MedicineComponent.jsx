@@ -28,7 +28,7 @@ const MedicineComponent = () => {
                             onPress={() => setIsTaken(!isTaken)}
                             className='bg-orange-500 p-2 px-6 rounded-2xl '
                         >
-                            <Text className='text-white font-spaceRegular'>Take</Text>
+                            <Text className='text-white font-spaceSemiBold'>Take</Text>
                         </TouchableOpacity>
                     ) : (
                         <TouchableOpacity

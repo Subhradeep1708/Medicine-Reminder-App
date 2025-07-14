@@ -9,12 +9,12 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { useNavigation } from 'expo-router';
 import DrawerButton from "@/components/DrawerButton";
 import { LinearGradient } from "expo-linear-gradient";
-import MedicationScreen from '../addMedication.jsx'
+import MedicationScreen from '../addmedication.jsx'
 const Home = () => {
   const navigation = useNavigation();
   const insets = useSafeAreaInsets()
 
-  return <MedicationScreen />
+  // return <MedicationScreen />
 
   return (
     <>
@@ -27,11 +27,11 @@ const Home = () => {
       >
 
 
-        <View className="flex-1 items-center bg-green-700 p-2 rounded-b-[37] pt-6">
+        <View className="flex-1 items-center bg-green-600 p-2 rounded-b-[37] pt-6">
           <View className=" w-full flex-row justify-between p-4 " >
             <DrawerButton />
             <Text className=" font-spaceBold text-2xl text-white align-middle">Daily Progress</Text>
-            <View className=" rounded-lg p-4 "
+            <View className="rounded-lg p-4 "
               style={{
                 backgroundColor: 'rgba(255, 255, 255, 0.3)',
                 padding: 5,
@@ -41,45 +41,54 @@ const Home = () => {
                 margin: 2
               }}
             >
-              <Ionicons name="notifications-outline" size={27} color={"white"} />
+              <Ionicons name="notifications-outline" size={27} color={"white"} className="outline-8 outline-white" />
             </View>
           </View>
           <View className="">
             <CircularProgressBar />
           </View>
         </View>
-        <Text className=" font-spaceBold text-2xl text-black p-4">Quick Actions</Text>
+        <Text className="mt-6 font-spaceBold text-2xl text-black p-4">Quick Actions</Text>
 
 
 
 
-        <View className="flex-row p-2 justify-evenly" >
+        <ScrollView
+          horizontal={true}
+          showsHorizontalScrollIndicator={false}
+          className="space-x-2 px-2 "
+        >
 
           <QuickActionCard
             iconName={'add-circle-outline'}
-            bgColorFrom={'#149e05'}
-            bgColorTo={'#127207'}
-            text={'Add Medication'}
-            route={'/(drawer)/addMedication'}
+            text={`Add\nMedication`}
+            route={'/(drawer)/addmedication'}
+            iconBg="bg-blue-500"
           />
 
           <QuickActionCard
             iconName={'calendar-outline'}
-            bgColorFrom={'#4e6ee2'}
-            bgColorTo={'#3156de'}
-            text={'Search Dose'}
+            text={'Search\nDose'}
+            iconBg="bg-orange-600"
+          />
+          <QuickActionCard
+            iconName={'time-outline'}
+            text={'Log\nHistory'}
+            iconBg="bg-cyan-600"
+          />
+          <QuickActionCard
+            iconName={'medical-outline'}
+            text={'Refill Tracker'}
+            iconBg="bg-pink-500"
           />
 
-        </View>
+        </ScrollView>
 
-        <View className="flex-row p-2 justify-evenly" >
-          <QuickActionCard iconName={'time-outline'} bgColorFrom={'#d41983'} bgColorTo={'#bb0c6f'} text={'Log History'} />
-          <QuickActionCard iconName={'medical-outline'} bgColorFrom={'#d4401f'} bgColorTo={'#c13515'} text={'Refill Tracker'} />
-        </View>
+      
 
-
-        <Text className=" font-spaceBold text-2xl text-black p-4">Today&apos;s Schedule</Text>
-        <MedicineComponent />
+        <Text className="mt-6 font-spaceBold text-2xl text-black p-4">
+          Today&apos;s Schedule
+        </Text>
         <MedicineComponent />
         <MedicineComponent />
         <MedicineComponent />
