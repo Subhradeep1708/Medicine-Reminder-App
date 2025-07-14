@@ -1,5 +1,5 @@
-import { View, Text, KeyboardAvoidingView, ScrollView, TouchableOpacity, TextInput, Platform } from 'react-native'
-import { useState } from 'react'
+import { View, Text, KeyboardAvoidingView, ScrollView, TouchableOpacity, TextInput, Platform, FlatList } from 'react-native'
+import { useEffect, useState } from 'react'
 import { COLORS } from '@/constants/color'
 import { Ionicons, MaterialIcons } from '@expo/vector-icons'
 import { router } from 'expo-router'
@@ -13,19 +13,75 @@ import useMedicineStore from '@/store/medicineStore'
 const MedicationScreen = () => {
     const { medicines, addMedicine, removeMedicine, clearAll } = useMedicineStore();
 
+
+
+
+    // all the datas 
+
+
+    const [name, setName] = useState("")
+    const [dose, setDose] = useState("")
+    const [sliderValue, setSliderValue] = useState(0);
+    const [startDate, setStartDate] = useState(new Date());
+    const [time, setTime] = useState([new Date()]);
+    const [tempValue, setTempValue] = useState(0);
+
+    const [selectedTimes, setSelectedTimes] = useState("")
+
+    const [isReminderSwitchOn, setIsReminderSwitchOn] = useState(false);
+    const [isRefillSwitchOn, setIsRefillSwitchOn] = useState(false);
+    const [note, setNote] = useState("")
+
+
+    const onToggleReminderSwitch = () => setIsReminderSwitchOn(!isReminderSwitchOn);
+    const onToggleRefillSwitch = () => setIsRefillSwitchOn(!isRefillSwitchOn);
+
+
+    const howOftenOptions = [
+        { text: 'Once daily', icon: 'sunny-outline' },
+        { text: 'Twice daily', icon: 'sync-outline' },
+        { text: 'Thrice daily', icon: 'time-outline' },
+        { text: 'Four times daily', icon: 'repeat-outline' },
+        { text: 'Five times daily', icon: 'reload-outline' },
+        { text: 'As needed', icon: 'calendar-outline' },
+    ]
+
+    const resetForm = () => {
+        setName('');
+        setDose('');
+        setSliderValue(0);
+        setStartDate(new Date());
+        setTime([new Date()]);
+        setTempValue(0);
+        setSelectedTimes('');
+        setIsReminderSwitchOn(false);
+        setIsRefillSwitchOn(false);
+        setNote('');
+    };
+
     const handleSubmit = () => {
+        if (!name.trim() || !dose.trim() || sliderValue <= 0 || time.length === 0) {
+            alert("Please fill out all required fields.");
+            return;
+        }
+
         const newMedicine = {
             id: nanoid(),
-            name: 'Paracetamol',
-            dose: '500mg',
-            time: ['08:00 AM', '08:00 PM'],
-            howOften: 'Every 12 hours',
-            startDate: '2025-07-14',
-            durationDays: 5
+            name,
+            dose,
+            time: time.map(t => t.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true })),
+            howOften: selectedTimes,
+            howManyDays: sliderValue,
+            startDate: startDate.toISOString().split('T')[0],
+            isReminder: isReminderSwitchOn,
+            isRefill: isRefillSwitchOn,
+            note,
+            isTaken: false
         };
-        console.log("Adding new medicine:", medicines);
-        
+
         addMedicine(newMedicine);
+        console.log("Adding new medicine:", medicines);
+        resetForm();
         router.back();
     }
 
@@ -39,7 +95,7 @@ const MedicationScreen = () => {
             onChange: (event, date) => {
                 if (date) {
                     // Handle selected date here
-                    setDate(date)
+                    setStartDate(date)
                 }
             },
         });
@@ -59,16 +115,12 @@ const MedicationScreen = () => {
         })
     }
 
-    const [isReminderSwitchOn, setIsReminderSwitchOn] = useState(false);
-    const [isRefillSwitchOn, setIsRefillSwitchOn] = useState(false);
 
-    const onToggleReminderSwitch = () => setIsReminderSwitchOn(!isReminderSwitchOn);
-    const onToggleRefillSwitch = () => setIsRefillSwitchOn(!isRefillSwitchOn);
+    useEffect(() => {
+        console.log("Updated medicines list:", medicines);
+    }, [medicines]);
 
-    const [value, setValue] = useState(0);
-    const [date, setDate] = useState(new Date());
-    const [time, setTime] = useState([new Date()]);
-    const [tempValue, setTempValue] = useState(7);
+
 
     return (
         <View className="" style={{ flex: 1, backgroundColor: COLORS.background }}>
@@ -102,14 +154,15 @@ const MedicationScreen = () => {
                     {/* drug name and dosage */}
                     <View className="flex-1 items-center justify-center gap-2">
                         <View
-                            className="w-[90%] border-2 rounded-3xl p-2 mt-2"
+                            className="w-[90%] border-2 rounded-3xl p-2 mt-6 "
                             style={{
                                 borderColor: COLORS.border,
                                 backgroundColor: 'white'
                             }}
                         >
                             <TextInput
-                                value={""}
+                                value={name}
+                                onChangeText={setName}
                                 className="font-spaceRegular"
                                 autoCapitalize="none"
                                 keyboardType='default'
@@ -121,7 +174,8 @@ const MedicationScreen = () => {
                             backgroundColor: 'white'
                         }}>
                             <TextInput
-                                value={""}
+                                value={dose}
+                                onChangeText={setDose}
                                 className="font-spaceRegular"
                                 keyboardType='default'
                                 placeholder="Dosage (e.g. 500mg)"
@@ -132,19 +186,31 @@ const MedicationScreen = () => {
 
                     {/* How Often Section */}
                     <Text className=" font-spaceBold text-2xl text-black p-4">How Often?</Text>
-                    <View>
-                        <View className='flex-row justify-around p-2'>
-                            <AddMedsCard icon={'sunny-outline'} text={'Once daily'} />
-                            <AddMedsCard icon={'sync-outline'} text={'Twice daily'} />
-                        </View>
-                        <View className='flex-row justify-around p-2'>
-                            <AddMedsCard icon={'time-outline'} text={'Thrice daily'} />
-                            <AddMedsCard icon={'repeat-outline'} text={'Four times daily'} />
-                        </View>
-                        <View className='flex-1 justify-around p-2 flex-row'>
-                            <AddMedsCard icon={'reload-outline'} text={'Five times daily'} />
-                            <AddMedsCard icon={'calendar-outline'} text={'As nedded'} />
-                        </View>
+
+                    <View className='flex flex-wrap flex-row gap-4 mx-4 my-2'>
+                        {howOftenOptions.map(({ text, icon }, index) => (
+                            <AddMedsCard
+                                key={index}
+                                icon={icon}
+                                text={text}
+                                selected={selectedTimes === text}
+                                onPress={() => setSelectedTimes(text)}
+                            />
+                        ))}
+                        {/* <FlatList
+                            data={howOftenOptions}
+                            keyExtractor={(item) => item.text}
+                            renderItem={({ item }) => (
+                                <AddMedsCard
+                                    icon={item.icon}
+                                    text={item.text}
+                                    selected={howOften === item.text}
+                                    onPress={() => setHowOften(item.text)}
+                                />
+                            )}
+                            numColumns={2}
+                        /> */}
+
                     </View>
 
                     {/* Time Section */}
@@ -156,7 +222,7 @@ const MedicationScreen = () => {
                     >
                         <Text
                             className='text-white font-spaceBold text-center text-xl'
-                        >Start On : {date.toDateString()}</Text>
+                        >Start On : {startDate.toDateString()}</Text>
                     </TouchableOpacity>
 
                     <Text
@@ -165,8 +231,7 @@ const MedicationScreen = () => {
                         For {tempValue} days
                     </Text>
                     <Slider
-                        value={value}
-                        // className='h-10'
+                        value={sliderValue}
                         step={1}
                         minimumValue={0}
                         maximumValue={40}
@@ -174,7 +239,7 @@ const MedicationScreen = () => {
                         maximumTrackTintColor="#17f455"
                         onValueChange={setTempValue}
                         onSlidingComplete={(val) => {
-                            setValue(Math.round(val));
+                            setSliderValue(Math.round(val));
                         }}
                         style={{ height: 30, marginLeft: 12, marginRight: 12 }}
                     />
@@ -298,12 +363,15 @@ const MedicationScreen = () => {
                         }}
                     >
                         <TextInput
-                            value={""}
+                            value={note}
+                            onChangeText={setNote}
                             className="font-spaceRegular"
                             autoCapitalize="none"
                             keyboardType='default'
                             placeholder="Add notes or special Instructions..."
                             multiline
+                            numberOfLines={4}
+                            style={{ height: 100, textAlignVertical: 'top' }}
                         />
                     </View>
 
@@ -332,7 +400,10 @@ const MedicationScreen = () => {
                     </TouchableOpacity>
                     <TouchableOpacity
                         className=" gap-y-6 border-[2px] border-red-700  py-3 rounded-xl items-center"
-                        onPress={() => {/* Cancel or Back */ }}
+                        onPress={() => {
+                            resetForm();
+                            router.back()
+                        }}
                     >
                         <Text className="text-red-500 font-spaceBold text-lg">Cancel</Text>
                     </TouchableOpacity>

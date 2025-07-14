@@ -3,8 +3,8 @@ import { router } from 'expo-router'
 import { useState } from 'react'
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native'
 
-const AddMedsCard = ({ icon, text }) => {
-    const [selected, setSelected] = useState(false)
+const AddMedsCard = ({ icon, text, selected, onPress }) => {
+
     return (
 
         <View
@@ -27,7 +27,7 @@ const AddMedsCard = ({ icon, text }) => {
             }}
         >
             <TouchableOpacity
-                onPress={() => setSelected(prev => !prev)}
+                onPress={onPress}
                 // className="flex-1"
                 activeOpacity={0.6}
 

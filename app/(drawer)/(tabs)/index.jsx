@@ -10,10 +10,13 @@ import { useNavigation } from 'expo-router';
 import DrawerButton from "@/components/DrawerButton";
 import { LinearGradient } from "expo-linear-gradient";
 import MedicationScreen from '../addmedication.jsx'
+import useMedicineStore from "@/store/medicineStore";
 const Home = () => {
   const navigation = useNavigation();
   const insets = useSafeAreaInsets()
 
+  const medicines = useMedicineStore((state) => state.medicines);
+  const toggleTaken = useMedicineStore((state) => state.toggleTaken);
   // return <MedicationScreen />
 
   return (
@@ -84,15 +87,22 @@ const Home = () => {
 
         </ScrollView>
 
-      
+
 
         <Text className="mt-6 font-spaceBold text-2xl text-black p-4">
           Today&apos;s Schedule
         </Text>
-        <MedicineComponent />
-        <MedicineComponent />
-        <MedicineComponent />
-        <MedicineComponent />
+        {medicines.length > 0 && medicines.map((med) =>
+        (<MedicineComponent
+          key={med.id}
+          name={med.name}
+          dose={med.dose}
+          time={med.time.join(' & ')}
+          isTaken={med.isTaken}
+          onToggle={() => toggleTaken(med.id)}
+        />
+        ))}
+
 
       </ScrollView>
 
