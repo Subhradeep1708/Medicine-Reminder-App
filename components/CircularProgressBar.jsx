@@ -2,11 +2,11 @@ import CircularProgress from 'react-native-circular-progress-indicator';
 import { Text, View } from 'react-native'
 
 const CircularProgressBar = () => {
-    let val = 36;
+    let val = 7;
     return (
         <View className="font-spaceSemiBold justify-center p-8 pb-12 ">
             <CircularProgress
-                value={36}
+                value={70}
                 progressValueStyle={{
                     fontSize: 43,
                     fontFamily: 'SpaceGrotesk-SemiBold'

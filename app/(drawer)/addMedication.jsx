@@ -1,5 +1,5 @@
-import { View, Text, KeyboardAvoidingView, ScrollView, TouchableOpacity, TextInput, Platform, FlatList } from 'react-native'
-import { useEffect, useState } from 'react'
+import { View, Text, KeyboardAvoidingView, ScrollView, TouchableOpacity, TextInput, Platform } from 'react-native'
+import { useState } from 'react'
 import { COLORS } from '@/constants/color'
 import { Ionicons, MaterialIcons } from '@expo/vector-icons'
 import { router } from 'expo-router'
@@ -11,10 +11,7 @@ import { nanoid } from 'nanoid/non-secure'
 import useMedicineStore from '@/store/medicineStore'
 
 const MedicationScreen = () => {
-    const { medicines, addMedicine, removeMedicine, clearAll } = useMedicineStore();
-
-
-
+    const { addMedicine } = useMedicineStore();
 
     // all the datas 
 
@@ -23,7 +20,7 @@ const MedicationScreen = () => {
     const [dose, setDose] = useState("")
     const [sliderValue, setSliderValue] = useState(0);
     const [startDate, setStartDate] = useState(new Date());
-    const [time, setTime] = useState([new Date()]);
+    const [time, setTime] = useState([]);
     const [tempValue, setTempValue] = useState(0);
 
     const [selectedTimes, setSelectedTimes] = useState("")
@@ -38,12 +35,12 @@ const MedicationScreen = () => {
 
 
     const howOftenOptions = [
-        { text: 'Once daily', icon: 'sunny-outline' },
-        { text: 'Twice daily', icon: 'sync-outline' },
-        { text: 'Thrice daily', icon: 'time-outline' },
-        { text: 'Four times daily', icon: 'repeat-outline' },
-        { text: 'Five times daily', icon: 'reload-outline' },
-        { text: 'As needed', icon: 'calendar-outline' },
+        { id: 1, text: 'Once daily', icon: 'sunny-outline' },
+        { id: 2, text: 'Twice daily', icon: 'sync-outline' },
+        { id: 3, text: 'Thrice daily', icon: 'time-outline' },
+        { id: 4, text: 'Four times daily', icon: 'repeat-outline' },
+        { id: 5, text: 'Five times daily', icon: 'reload-outline' },
+        { id: 6, text: 'As needed', icon: 'calendar-outline' },
     ]
 
     const resetForm = () => {
@@ -80,7 +77,7 @@ const MedicationScreen = () => {
         };
 
         addMedicine(newMedicine);
-        console.log("Adding new medicine:", medicines);
+        // console.log("Adding new medicine:", medicines);
         resetForm();
         router.back();
     }
@@ -108,19 +105,22 @@ const MedicationScreen = () => {
             is24Hour: false,
             display: 'clock',
             onChange: (event, selectedTime) => {
-                if (selectedTime) {
-                    setTime(prev => [...prev, selectedTime]);
+                if (selectedTime instanceof Date) {
+                    setTime(prev => {
+                        // Avoid duplicates
+                        const exists = prev.find(t => t.getHours() === selectedTime.getHours() && t.getMinutes() === selectedTime.getMinutes());
+                        if (!exists) return [...prev, selectedTime];
+                        return prev;
+                    });
                 }
-            },
+            }
+
         })
     }
 
-
-    useEffect(() => {
-        console.log("Updated medicines list:", medicines);
-    }, [medicines]);
-
-
+    // useEffect(() => {
+    //     console.log("Updated medicines list:", medicines);
+    // }, [medicines]);
 
     return (
         <View className="" style={{ flex: 1, backgroundColor: COLORS.background }}>
@@ -134,6 +134,7 @@ const MedicationScreen = () => {
                         paddingBottom: Platform.OS === 'ios' ? 180 : 140,
                     }}
                     keyboardShouldPersistTaps="handled"
+                    removeClippedSubviews={true}
                 >
                     {/* header */}
                     <View className='bg-green-700 h-[98] rounded-b-[29]'>
@@ -147,7 +148,9 @@ const MedicationScreen = () => {
                                     className='items-center justify-center content-center left-1'
                                 />
                             </TouchableOpacity>
-                            <Text className='flex-1 font-spaceBold text-2xl pl-6 text-white '>New Medication</Text>
+                            <Text className='flex-1 font-spaceBold text-2xl pl-6 text-white '>
+                                New Medication 
+                            </Text>
                         </View>
                     </View>
 
@@ -164,7 +167,7 @@ const MedicationScreen = () => {
                                 value={name}
                                 onChangeText={setName}
                                 className="font-spaceRegular"
-                                autoCapitalize="none"
+                                autoCapitalize="words"
                                 keyboardType='default'
                                 placeholder="Drug Name"
                             />
@@ -197,23 +200,9 @@ const MedicationScreen = () => {
                                 onPress={() => setSelectedTimes(text)}
                             />
                         ))}
-                        {/* <FlatList
-                            data={howOftenOptions}
-                            keyExtractor={(item) => item.text}
-                            renderItem={({ item }) => (
-                                <AddMedsCard
-                                    icon={item.icon}
-                                    text={item.text}
-                                    selected={howOften === item.text}
-                                    onPress={() => setHowOften(item.text)}
-                                />
-                            )}
-                            numColumns={2}
-                        /> */}
-
                     </View>
 
-                    {/* Time Section */}
+                    {/* Date Section */}
                     <Text className=" font-spaceBold text-2xl text-black p-4">For How Long?</Text>
 
                     <TouchableOpacity
@@ -225,6 +214,7 @@ const MedicationScreen = () => {
                         >Start On : {startDate.toDateString()}</Text>
                     </TouchableOpacity>
 
+                    {/* Days slider */}
                     <Text
                         className='font-spaceMedium flex-1 mb-3 text-center text-xl'
                     >
@@ -244,7 +234,11 @@ const MedicationScreen = () => {
                         style={{ height: 30, marginLeft: 12, marginRight: 12 }}
                     />
 
-                    <Text className=" font-spaceBold text-2xl text-black p-4">Medication Time</Text>
+
+                    {/* Time Section */}
+                    <Text className=" font-spaceBold text-2xl text-black p-4">
+                        Medication Time
+                    </Text>
 
                     <TouchableOpacity
                         onPress={showTimePicker}
@@ -262,21 +256,30 @@ const MedicationScreen = () => {
                             >
                                 <Ionicons name="time-outline" size={25} color="green" />
                             </View>
-                            <Text className="font-spaceBold text-xl text-center ml-4">
-                                {time[time.length - 1].toLocaleTimeString([], {
-                                    hour: '2-digit',
-                                    minute: '2-digit',
-                                    hour12: true,
-                                })}
-                            </Text>
+                            {time.length > 0 ? (
+                                <Text className="font-spaceBold text-xl text-center ml-4">
+                                    {time[time.length - 1].toLocaleTimeString([], {
+                                        hour: '2-digit',
+                                        minute: '2-digit',
+                                        hour12: true,
+                                    })}
+                                </Text>
+                            ) : (
+                                <Text className="font-spaceRegular text-gray-500 text-center ml-4">
+                                    No time selected
+                                </Text>
+                            )}
+
                         </View>
 
                         {/* Right Arrow Icon */}
                         <Ionicons name="chevron-forward-outline" size={25} color="green" />
                     </TouchableOpacity>
 
-                    <View className='flex-row flex-wrap mx-4 gap-2 '>
-                        {time.map((item, index) => (
+
+                    {/* Showing time */}
+                    {time.length > 0 && (<View className='flex-row flex-wrap mx-4 gap-2 '>
+                        {time.filter(Boolean).map((item, index) => (
                             <View key={index} className="items-center justify-center">
                                 <View className="rounded-lg p-1 h-8 w-20 items-center justify-center"
                                     style={{ backgroundColor: '#67e379ca' }}
@@ -287,7 +290,7 @@ const MedicationScreen = () => {
                                 </View>
                             </View>
                         ))}
-                    </View>
+                    </View>)}
 
 
                     {/* Reminder switch */}
@@ -305,19 +308,20 @@ const MedicationScreen = () => {
                                 <Ionicons name='notifications' size={25} color={'green'} />
                             </View>
                             <View className='flex-1'>
-
                                 <Text
                                     className='ml-0 font-spaceBold text-xl pl-3'
                                 >
                                     Reminders
                                 </Text>
                                 <Text
-                                    className='ml-0 font-spaceRegular  pl-3'
+                                    className='ml-0 font-spaceRegular pl-3'
                                 >
                                     Get notified when it&apos;s time to take your medicine
                                 </Text>
                             </View>
-                            <Switch value={isReminderSwitchOn} onValueChange={onToggleReminderSwitch}
+                            <Switch
+                                value={isReminderSwitchOn}
+                                onValueChange={onToggleReminderSwitch}
                                 color='green'
                             />
                         </View>
@@ -399,13 +403,13 @@ const MedicationScreen = () => {
                         <Text className="text-white font-spaceBold text-lg">Add Medication</Text>
                     </TouchableOpacity>
                     <TouchableOpacity
-                        className=" gap-y-6 border-[2px] border-red-700  py-3 rounded-xl items-center"
+                        className=" gap-y-6 border-[1.5px] border-red-600  py-3 rounded-xl items-center"
                         onPress={() => {
                             resetForm();
                             router.back()
                         }}
                     >
-                        <Text className="text-red-500 font-spaceBold text-lg">Cancel</Text>
+                        <Text className="text-red-600 font-spaceBold text-lg">Cancel</Text>
                     </TouchableOpacity>
 
                 </View>

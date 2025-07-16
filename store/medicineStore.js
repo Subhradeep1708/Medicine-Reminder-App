@@ -36,7 +36,6 @@ const useMedicineStore = create(
                     await AsyncStorage.removeItem(key);
                 },
             },
-            // This line ensures Zustand doesn't try to auto-serialize again
             serialize: false,
             deserialize: false,
         }

@@ -1,4 +1,4 @@
-import { ScrollView, Text, TouchableOpacity, View } from "react-native";
+import { ScrollView, Text, View } from "react-native";
 import "../../../global.css"
 import CircularProgressBar from '@/components/CircularProgressBar'
 import { Ionicons } from '@expo/vector-icons';
@@ -8,8 +8,6 @@ import MedicineComponent from "@/components/MedicineComponent";
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { useNavigation } from 'expo-router';
 import DrawerButton from "@/components/DrawerButton";
-import { LinearGradient } from "expo-linear-gradient";
-import MedicationScreen from '../addmedication.jsx'
 import useMedicineStore from "@/store/medicineStore";
 const Home = () => {
   const navigation = useNavigation();
@@ -29,7 +27,7 @@ const Home = () => {
         showsVerticalScrollIndicator={false}
       >
 
-
+        {/* Top Circular Progress Bar */}
         <View className="flex-1 items-center bg-green-600 p-2 rounded-b-[37] pt-6">
           <View className=" w-full flex-row justify-between p-4 " >
             <DrawerButton />
@@ -51,10 +49,9 @@ const Home = () => {
             <CircularProgressBar />
           </View>
         </View>
+
+        {/* Quick Action Section */}
         <Text className="mt-6 font-spaceBold text-2xl text-black p-4">Quick Actions</Text>
-
-
-
 
         <ScrollView
           horizontal={true}
@@ -92,7 +89,7 @@ const Home = () => {
         <Text className="mt-6 font-spaceBold text-2xl text-black p-4">
           Today&apos;s Schedule
         </Text>
-        {medicines.length > 0 && medicines.map((med) =>
+        {medicines.length > 0 && medicines.slice().reverse().map((med) =>
         (<MedicineComponent
           key={med.id}
           name={med.name}

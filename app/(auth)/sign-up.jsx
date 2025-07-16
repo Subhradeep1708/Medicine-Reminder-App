@@ -77,7 +77,7 @@ export default function SignUpScreen() {
             <KeyboardAvoidingView
                 behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
                 keyboardVerticalOffset={Platform.OS === "ios" ? 64 : 0}
-                style={{ flex: 1, backgroundColor: COLORS.background }}
+                style={{ flex: 1, backgroundColor: COLORS.background ,paddingTop: 20}}
             >
                 <ScrollView>
                     <View>
@@ -132,7 +132,7 @@ export default function SignUpScreen() {
     }
 
     return (
-        <View className="flex-1" style={{ backgroundColor: COLORS.background }}>
+        <View className="flex-1 pt-8" style={{ backgroundColor: COLORS.background }}>
             <KeyboardAvoidingView
                 behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
                 keyboardVerticalOffset={Platform.OS === "ios" ? 64 : 0}

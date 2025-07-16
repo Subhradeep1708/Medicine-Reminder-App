@@ -44,7 +44,7 @@ export default function SignInScreen() {
   }
 
   return (
-    <View className="flex-1 " style={{ backgroundColor: COLORS.background }}>
+    <View className="flex-1 pt-8 " style={{ backgroundColor: COLORS.background }}>
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         keyboardVerticalOffset={Platform.OS === "ios" ? 64 : 0}

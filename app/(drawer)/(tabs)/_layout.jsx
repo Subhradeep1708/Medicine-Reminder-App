@@ -46,15 +46,15 @@ const TabsLayout = () => {
                     }}
                 />
                 <Tabs.Screen
-                name="hello"
-                options={{
-                    title: 'Hello',
-                    tabBarIcon: ({ color, size }) => (
-                        <Ionicons name="calendar-clear" size={size} color={color} />
-                    ),
+                    name="profile"
+                    options={{
+                        title: 'Profile',
+                        tabBarIcon: ({ color, size }) => (
+                            <Ionicons name="calendar-clear" size={size} color={color} />
+                        ),
 
-                }}
-            />
+                    }}
+                />
 
             </Tabs>
         </View>
