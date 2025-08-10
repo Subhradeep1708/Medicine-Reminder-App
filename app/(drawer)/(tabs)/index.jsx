@@ -69,11 +69,13 @@ const Home = () => {
           <QuickActionCard
             iconName={'calendar-outline'}
             text={'Search\nDose'}
+            route={'/(tabs)/calendar'}
             iconBg="bg-orange-600"
           />
           <QuickActionCard
             iconName={'time-outline'}
             text={'Log\nHistory'}
+            route={'/(drawer)/allMeds'}
             iconBg="bg-cyan-600"
           />
           <QuickActionCard

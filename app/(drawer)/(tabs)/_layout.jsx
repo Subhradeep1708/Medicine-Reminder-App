@@ -55,7 +55,16 @@ const TabsLayout = () => {
 
                     }}
                 />
+                <Tabs.Screen
+                    name="allMeds"
+                    options={{
+                        title: 'Medications',
+                        tabBarIcon: ({ color, size }) => (
+                            <Ionicons name="medical-outline" size={size} color={color} />
+                        ),
 
+                    }}
+                />
             </Tabs>
         </View>
     )

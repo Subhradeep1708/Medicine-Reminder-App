@@ -1,9 +1,7 @@
-import { View, Platform, Pressable } from 'react-native';
+import { View, Pressable } from 'react-native';
 import { useLinkBuilder, useTheme } from '@react-navigation/native';
-import { Text, PlatformPressable } from '@react-navigation/elements';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { Text } from '@react-navigation/elements';
 import { COLORS } from '../constants/color'
-import { AntDesign, Ionicons } from '@expo/vector-icons';
 import { icons } from '../assets/icons';
 
 const TabBar = ({ state, descriptors, navigation }) => {

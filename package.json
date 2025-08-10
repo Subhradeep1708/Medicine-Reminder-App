@@ -41,6 +41,7 @@
     "react": "19.0.0",
     "react-dom": "19.0.0",
     "react-native": "0.79.3",
+    "react-native-calendars": "^1.1313.0",
     "react-native-circular-progress-indicator": "^4.4.2",
     "react-native-gesture-handler": "~2.24.0",
     "react-native-paper": "^5.14.5",

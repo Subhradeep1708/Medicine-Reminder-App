@@ -1,15 +1,13 @@
 import { View, Text, TouchableOpacity } from 'react-native'
 import { useState } from 'react';
-import DateTimePicker, { DateType, useDefaultClassNames, useDefaultStyles } from 'react-native-ui-datepicker';
+import  { DateType, useDefaultClassNames } from 'react-native-ui-datepicker';
 import { COLORS } from '@/constants/color';
 import { MaterialIcons } from '@expo/vector-icons';
 import { router } from 'expo-router';
+import CalenderComponent from '@/components/CalenderComponent';
 
 const Calendar = () => {
     // const defaultStyles = useDefaultStyles();    
-    const defaultClassNames = useDefaultClassNames()
-    const [selected, setSelected] = useState<DateType>(new Date());
-    let today = new Date();
     return (
         <View style={{ flex: 1, backgroundColor: COLORS.background }}>
             <View className='bg-green-700 h-[98] rounded-b-[29]'>
@@ -31,7 +29,7 @@ const Calendar = () => {
 
             <View className='p-4 '>
 
-                <DateTimePicker
+                {/* <DateTimePicker
                     mode="single"
                     showOutsideDays={true}
                     date={selected}
@@ -52,7 +50,8 @@ const Calendar = () => {
                     }}
                     // styles={defaultStyles}
                     timeZone='UTC'
-                />
+                /> */}
+                <CalenderComponent />
             </View>
         </View>
     )
