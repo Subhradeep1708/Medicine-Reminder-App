@@ -1,60 +1,43 @@
-import { View, Text, TouchableOpacity } from 'react-native'
-import { useState } from 'react';
-import  { DateType, useDefaultClassNames } from 'react-native-ui-datepicker';
-import { COLORS } from '@/constants/color';
+import { View, Text, TouchableOpacity } from 'react-native';
+import { useContext } from 'react';
 import { MaterialIcons } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import CalenderComponent from '@/components/CalenderComponent';
+import { ThemeContext } from "../../_layout";// ensure correct path
 
 const Calendar = () => {
-    // const defaultStyles = useDefaultStyles();    
-    return (
-        <View style={{ flex: 1, backgroundColor: COLORS.background }}>
-            <View className='bg-green-700 h-[98] rounded-b-[29]'>
-                <View className='flex-row items-center mt-10 py-2 px-5 '>
-                    <TouchableOpacity
-                        className='h-11 w-11 rounded-full bg-white items-center justify-center'
-                        onPress={() => router.back()}
-                    >
-                        <MaterialIcons name='arrow-back-ios' size={25}
-                            color={'#127207'}
-                            className='items-center justify-center content-center left-1'
-                        />
-                    </TouchableOpacity>
-                    <Text className='flex-1 font-spaceBold text-2xl pl-6 text-white '>
-                        Medication Schedule
-                    </Text>
-                </View>
-            </View>
+  const { isDark } = useContext(ThemeContext);
 
-            <View className='p-4 '>
+  // Dynamic colors
+  const bgColor = isDark ? '#121212' : '#ffffff';
+  const headerBg = isDark ? '#1f451f' : '#16a34a'; // dark green variant
+  const textColor = isDark ? '#ffffff' : '#ffffff'; // header text stays white
+  const iconColor = isDark ? '#81c784' : '#127207'; // lighter green in dark mode
 
-                {/* <DateTimePicker
-                    mode="single"
-                    showOutsideDays={true}
-                    date={selected}
-                    minDate={today}
-                    onChange={({ date }) => setSelected(date)}
-                    containerHeight={330}
-                    navigationPosition='right'
-                    classNames={{
-                        ...defaultClassNames,
-                        day_cell: ' text-white  font-semibold', // Style for each day cell
-                        header: 'bg-green-700 text-white rounded-xl', // Style for the header
-                        month_label: 'text-white font-bold', // Style for the month label
-                        today: 'text-white bg-green-700/80 rounded-full ', // Add a border to today's date
-                        selected: 'text-white border-2  border-cyan-500/80 rounded-full', // Highlight the selected day
-                        selected_label: "text-cyan-700 ", // Highlight the selected day label
-                        day: `${defaultClassNames.day} hover:bg-blue-100`, // Change background color on hover
-                        disabled: 'opacity-50', // Make disabled dates appear more faded
-                    }}
-                    // styles={defaultStyles}
-                    timeZone='UTC'
-                /> */}
-                <CalenderComponent />
-            </View>
+  return (
+    <View style={{ flex: 1, backgroundColor: bgColor }}>
+      {/* Header */}
+      <View style={{ backgroundColor: headerBg, height: 98, borderBottomLeftRadius: 29, borderBottomRightRadius: 29 }}>
+        <View className="flex-row items-center mt-10 py-2 px-5">
+          <TouchableOpacity
+            className="h-11 w-11 rounded-full items-center justify-center"
+            style={{ backgroundColor: isDark ? '#2c2c2c' : '#ffffff' }}
+            onPress={() => router.back()}
+          >
+            <MaterialIcons name="arrow-back-ios" size={25} color={iconColor} />
+          </TouchableOpacity>
+          <Text className="flex-1 font-spaceBold text-2xl pl-6" style={{ color: textColor }}>
+            Medication Schedule
+          </Text>
         </View>
-    )
-}
+      </View>
 
-export default Calendar
+      {/* Calendar Component */}
+      <View className="p-4">
+        <CalenderComponent darkMode={isDark} /> {/* Pass dark mode prop to your calendar */}
+      </View>
+    </View>
+  );
+};
+
+export default Calendar;
