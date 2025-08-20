@@ -1,5 +1,7 @@
 import { ScrollView, Text, View, TouchableOpacity } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import { useContext } from 'react';
+import { ThemeContext } from '../_layout';
 
 const faqData = [
   { question: 'How do I add a new medication?', answer: '' },
@@ -8,46 +10,47 @@ const faqData = [
 ];
 
 const HelpScreen = () => {
+  const { isDark } = useContext(ThemeContext);
+
+  const bgColor = isDark ? '#121212' : '#fff';
+  const textColor = isDark ? '#fff' : '#141414';
+  const borderColor = isDark ? '#333' : '#e0e0e0';
+  const subTextColor = isDark ? '#aaa' : '#757575';
+
   return (
-    <ScrollView className="bg-white flex-1 pt-7 p-2">
-      <View className="p-4 pb-2 flex-row justify-between items-center">
-        {/* <TouchableOpacity>
-          <Ionicons name="arrow-back" size={24} color="#141414" />
-        </TouchableOpacity> */}
-        <Text className="text-xl font-spaceBold p-4 text-[#141414] flex-1 text-center">Help</Text>
+    <ScrollView style={{ backgroundColor: bgColor, flex: 1, paddingTop: 28, paddingHorizontal: 8 }}>
+      <View style={{ paddingVertical: 4, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+        <Text style={{ fontSize: 20, fontFamily: 'SpaceGrotesk-Bold', color: textColor, flex: 1, textAlign: 'center', padding: 8 }}>Help</Text>
       </View>
 
-      <Text className="text-[22px] font-bold text-[#141414] px-4 pt-5 pb-3">Frequently Asked Questions</Text>
-      <View className="px-4 gap-3">
+      <Text style={{ fontSize: 22, fontWeight: 'bold', color: textColor, paddingHorizontal: 16, paddingTop: 20, paddingBottom: 12 }}>Frequently Asked Questions</Text>
+      <View style={{ paddingHorizontal: 16, gap: 12 }}>
         {faqData.map((item, index) => (
-          <View
-            key={index}
-            className="border border-[#e0e0e0] rounded-xl p-3"
-          >
-            <TouchableOpacity className="flex-row justify-between items-center">
-              <Text className="text-sm font-medium text-[#141414]">{item.question}</Text>
-              <Ionicons name="chevron-down" size={20} color="#141414" />
+          <View key={index} style={{ borderWidth: 1, borderColor: borderColor, borderRadius: 12, padding: 12 }}>
+            <TouchableOpacity style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+              <Text style={{ fontSize: 14, fontFamily: 'SpaceGrotesk-Medium', color: textColor }}>{item.question}</Text>
+              <Ionicons name="chevron-down" size={20} color={textColor} />
             </TouchableOpacity>
             {item.answer ? (
-              <Text className="text-sm text-[#757575] pt-2">{item.answer}</Text>
+              <Text style={{ fontSize: 14, color: subTextColor, paddingTop: 8 }}>{item.answer}</Text>
             ) : null}
           </View>
         ))}
       </View>
 
-      <Text className="text-[22px] font-bold text-[#141414] px-4 pt-5 pb-3">Tutorial</Text>
-      <View className="bg-white min-h-[56px] flex-row items-center justify-between px-4">
-        <Text className="text-base text-[#141414] flex-1 truncate">Watch our tutorial video</Text>
-        <Ionicons name="play" size={24} color="#141414" />
+      <Text style={{ fontSize: 22, fontWeight: 'bold', color: textColor, paddingHorizontal: 16, paddingTop: 20, paddingBottom: 12 }}>Tutorial</Text>
+      <View style={{ backgroundColor: bgColor, minHeight: 56, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: 16 }}>
+        <Text style={{ fontSize: 16, color: textColor, flex: 1, overflow: 'hidden' }}>Watch our tutorial video</Text>
+        <Ionicons name="play" size={24} color={textColor} />
       </View>
 
-      <Text className="text-[22px] font-bold text-[#141414] px-4 pt-5 pb-3">Contact Support</Text>
-      <View className="bg-white min-h-[56px] flex-row items-center justify-between px-4">
-        <Text className="text-base text-[#141414] flex-1 truncate">Email us</Text>
-        <Ionicons name="mail" size={24} color="#141414" />
+      <Text style={{ fontSize: 22, fontWeight: 'bold', color: textColor, paddingHorizontal: 16, paddingTop: 20, paddingBottom: 12 }}>Contact Support</Text>
+      <View style={{ backgroundColor: bgColor, minHeight: 56, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: 16 }}>
+        <Text style={{ fontSize: 16, color: textColor, flex: 1, overflow: 'hidden' }}>Email us</Text>
+        <Ionicons name="mail" size={24} color={textColor} />
       </View>
 
-      <View className="h-5 bg-white" />
+      <View style={{ height: 20, backgroundColor: bgColor }} />
     </ScrollView>
   );
 };

@@ -1,19 +1,24 @@
 import { View, Pressable } from 'react-native';
-import { useLinkBuilder, useTheme } from '@react-navigation/native';
+import { useLinkBuilder } from '@react-navigation/native';
 import { Text } from '@react-navigation/elements';
-import { COLORS } from '../constants/color'
+import { COLORS } from '../constants/color';
 import { icons } from '../assets/icons';
+import { useContext } from 'react';
+import { ThemeContext } from '../app/_layout';  // your global ThemeContext
 
 const TabBar = ({ state, descriptors, navigation }) => {
-
-
-
-    const { colors } = useTheme();
     const { buildHref } = useLinkBuilder();
+    const { isDark } = useContext(ThemeContext); // get dark mode from RootLayout
+
+    // Dynamic colors based on theme
+    const backgroundColor = isDark ? '#1e1e1e' : '#fff';
+    const shadowColor = isDark ? '#555' : COLORS.shadow;
+    const activeColor = isDark ? '#bb86fc' : COLORS.primary;
+
     return (
         <View
-            style={{ borderCurve: 'continuous' }}
-            className="absolute bottom-6 flex-row bg-white justify-between py-4 rounded-[25px] mx-5 shadow-xl   "
+            style={{ borderCurve: 'continuous', backgroundColor }}
+            className="absolute bottom-6 flex-row justify-between py-4 rounded-[25px] mx-5 shadow-xl"
         >
             {state.routes.map((route, index) => {
                 const { options } = descriptors[route.key];
@@ -23,8 +28,6 @@ const TabBar = ({ state, descriptors, navigation }) => {
                         : options.title !== undefined
                             ? options.title
                             : route.name;
-
-
 
                 const isFocused = state.index === index;
 
@@ -58,20 +61,16 @@ const TabBar = ({ state, descriptors, navigation }) => {
                         onPress={onPress}
                         onLongPress={onLongPress}
                         style={{ flex: 1 }}
-                        className={`flex-1 items-center justify-center gap-1 `}
+                        className={`flex-1 items-center justify-center gap-1`}
                     >
-                        {
-                            icons[route.name]({
-                                color: isFocused ? COLORS.primary : COLORS.shadow
-                            })
-                        }
+                        {icons[route.name]({ color: isFocused ? activeColor : shadowColor })}
 
-                        <Text style={{
-                            color: isFocused ? COLORS.primary : COLORS.shadow,
-                            fontSize: 14,
-                            fontFamily: 'SpaceGrotesk-SemiBold'
-                        }}
-
+                        <Text
+                            style={{
+                                color: isFocused ? activeColor : shadowColor,
+                                fontSize: 14,
+                                fontFamily: 'SpaceGrotesk-SemiBold',
+                            }}
                         >
                             {label}
                         </Text>
@@ -79,7 +78,7 @@ const TabBar = ({ state, descriptors, navigation }) => {
                 );
             })}
         </View>
-    )
-}
+    );
+};
 
-export default TabBar
+export default TabBar;
