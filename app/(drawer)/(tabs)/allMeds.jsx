@@ -1,45 +1,53 @@
-import { View, Text, TouchableOpacity, ScrollView } from 'react-native'
+import { View, Text, TouchableOpacity, ScrollView } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
 import { router } from 'expo-router';
-import { COLORS } from '../../../constants/color';
 import useMedicineStore from "@/store/medicineStore";
 import MedicineComponent from '../../../components/MedicineComponent';
+import { ThemeContext } from '../../_layout'; // adjust path if needed
+import { useContext } from 'react';
 
 const AllMeds = () => {
-    const medicines = useMedicineStore((state) => state.medicines);
+  const medicines = useMedicineStore((state) => state.medicines);
+  const { isDark } = useContext(ThemeContext);
 
-    return (
-        <View style={{ flex: 1, backgroundColor: COLORS.background }}>
-            <View className='bg-green-700 h-[98] rounded-b-[29]'>
-                <View className='flex-row items-center mt-10 py-2 px-5 '>
-                    <TouchableOpacity
-                        className='h-11 w-11 rounded-full bg-white items-center justify-center'
-                        onPress={() => router.back()}
-                    >
-                        <MaterialIcons name='arrow-back-ios' size={25}
-                            color={'#127207'}
-                            className='items-center justify-center content-center left-1'
-                        />
-                    </TouchableOpacity>
-                    <Text className='flex-1 font-spaceBold text-2xl pl-6 text-white '>
-                        All Medication
-                    </Text>
-                </View>
-            </View>
+  // Dynamic colors
+  const bgColor = isDark ? '#121212' : '#ffffff';
+  const headerBg = isDark ? '#1f451f' : '#16a34a'; // darker green for dark mode
+  const textColor = '#ffffff'; // header text remains white
+  const iconBg = isDark ? '#2c2c2c' : '#ffffff'; // button background in dark mode
+  const iconColor = isDark ? '#81c784' : '#127207'; // icon color
 
-            <ScrollView className='p-4 '>
-                {
-                    medicines.map((med, index) => (
-                        <MedicineComponent
-                            key={index}
-                            medicine={med}
-                            toggleTaken={med.toggleTaken}
-                        />
-                    ))
-                }
-            </ScrollView>
+  return (
+    <View style={{ flex: 1, backgroundColor: bgColor }}>
+      {/* Header */}
+      <View style={{ backgroundColor: headerBg, height: 98, borderBottomLeftRadius: 29, borderBottomRightRadius: 29 }}>
+        <View className='flex-row items-center mt-10 py-2 px-5'>
+          <TouchableOpacity
+            className='h-11 w-11 rounded-full items-center justify-center'
+            style={{ backgroundColor: iconBg }}
+            onPress={() => router.back()}
+          >
+            <MaterialIcons name='arrow-back-ios' size={25} color={iconColor} />
+          </TouchableOpacity>
+          <Text className='flex-1 font-spaceBold text-2xl pl-6' style={{ color: textColor }}>
+            All Medication
+          </Text>
         </View>
-    )
-}
+      </View>
 
-export default AllMeds
+      {/* Medicines List */}
+      <ScrollView className='p-4'>
+        {medicines.map((med, index) => (
+          <MedicineComponent
+            key={index}
+            medicine={med}
+            toggleTaken={med.toggleTaken}
+            darkMode={isDark} // pass dark mode prop to MedicineComponent if it supports styling
+          />
+        ))}
+      </ScrollView>
+    </View>
+  );
+};
+
+export default AllMeds;

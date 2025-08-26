@@ -1,5 +1,5 @@
 import { View, Text, KeyboardAvoidingView, ScrollView, TouchableOpacity, TextInput, Platform } from 'react-native'
-import { useState } from 'react'
+import { useState, useContext } from 'react'
 import { COLORS } from '@/constants/color'
 import { Ionicons, MaterialIcons } from '@expo/vector-icons'
 import { router } from 'expo-router'
@@ -9,30 +9,26 @@ import { DateTimePickerAndroid } from '@react-native-community/datetimepicker';
 import { Switch } from 'react-native-paper'
 import { nanoid } from 'nanoid/non-secure'
 import useMedicineStore from '@/store/medicineStore'
+import { ThemeContext } from '../_layout' // import your ThemeContext
 
 const MedicationScreen = () => {
     const { addMedicine } = useMedicineStore();
+    const { isDark } = useContext(ThemeContext); // dark mode value
 
     // all the datas 
-
-
     const [name, setName] = useState("")
     const [dose, setDose] = useState("")
     const [sliderValue, setSliderValue] = useState(0);
     const [startDate, setStartDate] = useState(new Date());
     const [time, setTime] = useState([]);
     const [tempValue, setTempValue] = useState(0);
-
     const [selectedTimes, setSelectedTimes] = useState("")
-
     const [isReminderSwitchOn, setIsReminderSwitchOn] = useState(false);
     const [isRefillSwitchOn, setIsRefillSwitchOn] = useState(false);
     const [note, setNote] = useState("")
 
-
     const onToggleReminderSwitch = () => setIsReminderSwitchOn(!isReminderSwitchOn);
     const onToggleRefillSwitch = () => setIsRefillSwitchOn(!isRefillSwitchOn);
-
 
     const howOftenOptions = [
         { id: 1, text: 'Once daily', icon: 'sunny-outline' },
@@ -77,11 +73,9 @@ const MedicationScreen = () => {
         };
 
         addMedicine(newMedicine);
-        // console.log("Adding new medicine:", medicines);
         resetForm();
         router.back();
     }
-
 
     const showDatePicker = () => {
         DateTimePickerAndroid.open({
@@ -90,10 +84,7 @@ const MedicationScreen = () => {
             is24Hour: true,
             display: 'calendar',
             onChange: (event, date) => {
-                if (date) {
-                    // Handle selected date here
-                    setStartDate(date)
-                }
+                if (date) setStartDate(date);
             },
         });
     };
@@ -107,90 +98,75 @@ const MedicationScreen = () => {
             onChange: (event, selectedTime) => {
                 if (selectedTime instanceof Date) {
                     setTime(prev => {
-                        // Avoid duplicates
                         const exists = prev.find(t => t.getHours() === selectedTime.getHours() && t.getMinutes() === selectedTime.getMinutes());
                         if (!exists) return [...prev, selectedTime];
                         return prev;
                     });
                 }
             }
-
         })
     }
 
-    // useEffect(() => {
-    //     console.log("Updated medicines list:", medicines);
-    // }, [medicines]);
+    // Dark mode styles
+    const bgColor = isDark ? '#121212' : COLORS.background;
+    const cardBg = isDark ? '#1e1e1e' : 'white';
+    const textColor = isDark ? '#fff' : '#000';
+    const subTextColor = isDark ? '#aaa' : '#000';
+    const borderColor = isDark ? '#333' : COLORS.border;
 
     return (
-        <View className="" style={{ flex: 1, backgroundColor: COLORS.background }}>
+        <View style={{ flex: 1, backgroundColor: bgColor }}>
             <KeyboardAvoidingView
                 behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
                 style={{ flex: 1 }}
                 keyboardVerticalOffset={Platform.OS === 'ios' ? 80 : 0}
             >
                 <ScrollView
-                    contentContainerStyle={{
-                        paddingBottom: Platform.OS === 'ios' ? 180 : 140,
-                    }}
+                    contentContainerStyle={{ paddingBottom: Platform.OS === 'ios' ? 180 : 140 }}
                     keyboardShouldPersistTaps="handled"
                     removeClippedSubviews={true}
                 >
                     {/* header */}
-                    <View className='bg-green-700 h-[98] rounded-b-[29]'>
-                        <View className='flex-row items-center mt-10 py-2 px-5 '>
+                    <View style={{ backgroundColor: '#28a745', height: 98, borderBottomLeftRadius: 29, borderBottomRightRadius: 29 }}>
+                        <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 40, paddingVertical: 8, paddingHorizontal: 20 }}>
                             <TouchableOpacity
-                                className='h-11 w-11 rounded-full bg-white items-center justify-center'
+                                style={{ height: 44, width: 44, borderRadius: 22, backgroundColor: 'white', alignItems: 'center', justifyContent: 'center' }}
                                 onPress={() => router.back()}
                             >
-                                <MaterialIcons name='arrow-back-ios' size={25}
-                                    color={'#127207'}
-                                    className='items-center justify-center content-center left-1'
-                                />
+                                <MaterialIcons name='arrow-back-ios' size={25} color={'#127207'} />
                             </TouchableOpacity>
-                            <Text className='flex-1 font-spaceBold text-2xl pl-6 text-white '>
-                                New Medication 
-                            </Text>
+                            <Text style={{ flex: 1, fontFamily: 'SpaceGrotesk-Bold', fontSize: 22, color: 'white', paddingLeft: 16 }}>New Medication</Text>
                         </View>
                     </View>
 
                     {/* drug name and dosage */}
-                    <View className="flex-1 items-center justify-center gap-2">
-                        <View
-                            className="w-[90%] border-2 rounded-3xl p-2 mt-6 "
-                            style={{
-                                borderColor: COLORS.border,
-                                backgroundColor: 'white'
-                            }}
-                        >
+                    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', gap: 8 }}>
+                        <View style={{ width: '90%', borderWidth: 2, borderRadius: 30, padding: 8, marginTop: 16, borderColor: borderColor, backgroundColor: cardBg }}>
                             <TextInput
                                 value={name}
                                 onChangeText={setName}
-                                className="font-spaceRegular"
                                 autoCapitalize="words"
                                 keyboardType='default'
                                 placeholder="Drug Name"
+                                placeholderTextColor={subTextColor}
+                                style={{ fontFamily: 'SpaceGrotesk-Regular', color: textColor }}
                             />
                         </View>
-                        <View className="w-[90%] border-2 rounded-3xl p-2 mb-4" style={{
-                            borderColor: COLORS.border,
-                            backgroundColor: 'white'
-                        }}>
+                        <View style={{ width: '90%', borderWidth: 2, borderRadius: 30, padding: 8, marginBottom: 16, borderColor: borderColor, backgroundColor: cardBg }}>
                             <TextInput
                                 value={dose}
                                 onChangeText={setDose}
-                                className="font-spaceRegular"
                                 keyboardType='default'
                                 placeholder="Dosage (e.g. 500mg)"
-                            // onChangeText={(password) => setPassword(password)}
+                                placeholderTextColor={subTextColor}
+                                style={{ fontFamily: 'SpaceGrotesk-Regular', color: textColor }}
                             />
                         </View>
                     </View>
 
                     {/* How Often Section */}
-                    <Text className=" font-spaceBold text-2xl text-black p-4">How Often?</Text>
-
-                    <View className='flex flex-wrap flex-row gap-4 mx-4 my-2'>
+                    <Text style={{ fontFamily: 'SpaceGrotesk-Bold', fontSize: 22, color: textColor, padding: 16 }}>How Often?</Text>
+                    <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 12, marginHorizontal: 16, marginVertical: 8 }}>
                         {howOftenOptions.map(({ text, icon }, index) => (
                             <AddMedsCard
                                 key={index}
@@ -203,23 +179,16 @@ const MedicationScreen = () => {
                     </View>
 
                     {/* Date Section */}
-                    <Text className=" font-spaceBold text-2xl text-black p-4">For How Long?</Text>
-
+                    <Text style={{ fontFamily: 'SpaceGrotesk-Bold', fontSize: 22, color: textColor, padding: 16 }}>For How Long?</Text>
                     <TouchableOpacity
                         onPress={showDatePicker}
-                        className="bg-green-700 px-4 py-4 mx-4 my-4 rounded-xl   "
+                        style={{ backgroundColor: '#28a745', paddingVertical: 16, paddingHorizontal: 16, marginHorizontal: 16, marginVertical: 16, borderRadius: 16 }}
                     >
-                        <Text
-                            className='text-white font-spaceBold text-center text-xl'
-                        >Start On : {startDate.toDateString()}</Text>
+                        <Text style={{ textAlign: 'center', fontFamily: 'SpaceGrotesk-Bold', fontSize: 18, color: 'white' }}>Start On : {startDate.toDateString()}</Text>
                     </TouchableOpacity>
 
                     {/* Days slider */}
-                    <Text
-                        className='font-spaceMedium flex-1 mb-3 text-center text-xl'
-                    >
-                        For {tempValue} days
-                    </Text>
+                    <Text style={{ fontFamily: 'SpaceGrotesk-Medium', fontSize: 18, textAlign: 'center', marginBottom: 12, color: textColor }}>For {tempValue} days</Text>
                     <Slider
                         value={sliderValue}
                         step={1}
@@ -228,193 +197,103 @@ const MedicationScreen = () => {
                         minimumTrackTintColor="#ffffff"
                         maximumTrackTintColor="#17f455"
                         onValueChange={setTempValue}
-                        onSlidingComplete={(val) => {
-                            setSliderValue(Math.round(val));
-                        }}
+                        onSlidingComplete={(val) => setSliderValue(Math.round(val))}
                         style={{ height: 30, marginLeft: 12, marginRight: 12 }}
                     />
 
-
-                    {/* Time Section */}
-                    <Text className=" font-spaceBold text-2xl text-black p-4">
-                        Medication Time
-                    </Text>
-
+                    {/* Medication Time Section */}
+                    <Text style={{ fontFamily: 'SpaceGrotesk-Bold', fontSize: 22, color: textColor, padding: 16 }}>Medication Time</Text>
                     <TouchableOpacity
                         onPress={showTimePicker}
-                        className="flex-row items-center justify-between px-4 py-4 mx-4 my-4 rounded-xl"
-                        style={{
-                            borderColor: COLORS.border,
-                            backgroundColor: 'white'
-                        }}
+                        style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', padding: 16, marginHorizontal: 16, marginVertical: 16, borderRadius: 16, borderWidth: 1, borderColor: borderColor, backgroundColor: cardBg }}
                     >
-                        {/* Left Section: Icon + Time */}
-                        <View className="flex-row items-center">
-                            <View
-                                className="rounded-full p-1 h-12 w-12 items-center justify-center"
-                                style={{ backgroundColor: '#f0f0f0' }}
-                            >
+                        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                            <View style={{ borderRadius: 30, padding: 4, height: 48, width: 48, alignItems: 'center', justifyContent: 'center', backgroundColor: '#f0f0f0' }}>
                                 <Ionicons name="time-outline" size={25} color="green" />
                             </View>
                             {time.length > 0 ? (
-                                <Text className="font-spaceBold text-xl text-center ml-4">
-                                    {time[time.length - 1].toLocaleTimeString([], {
-                                        hour: '2-digit',
-                                        minute: '2-digit',
-                                        hour12: true,
-                                    })}
+                                <Text style={{ fontFamily: 'SpaceGrotesk-Bold', fontSize: 18, marginLeft: 16, color: textColor }}>
+                                    {time[time.length - 1].toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true })}
                                 </Text>
                             ) : (
-                                <Text className="font-spaceRegular text-gray-500 text-center ml-4">
-                                    No time selected
-                                </Text>
+                                <Text style={{ fontFamily: 'SpaceGrotesk-Regular', fontSize: 16, marginLeft: 16, color: subTextColor }}>No time selected</Text>
                             )}
-
                         </View>
-
-                        {/* Right Arrow Icon */}
                         <Ionicons name="chevron-forward-outline" size={25} color="green" />
                     </TouchableOpacity>
 
-
-                    {/* Showing time */}
-                    {time.length > 0 && (<View className='flex-row flex-wrap mx-4 gap-2 '>
-                        {time.filter(Boolean).map((item, index) => (
-                            <View key={index} className="items-center justify-center">
-                                <View className="rounded-lg p-1 h-8 w-20 items-center justify-center"
-                                    style={{ backgroundColor: '#67e379ca' }}
-                                >
-                                    <Text className="text-center">
-                                        {item.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true })}
-                                    </Text>
+                    {/* Show all times */}
+                    {time.length > 0 && (
+                        <View style={{ flexDirection: 'row', flexWrap: 'wrap', marginHorizontal: 16, gap: 8 }}>
+                            {time.filter(Boolean).map((item, index) => (
+                                <View key={index} style={{ alignItems: 'center', justifyContent: 'center' }}>
+                                    <View style={{ borderRadius: 12, padding: 4, height: 32, width: 80, alignItems: 'center', justifyContent: 'center', backgroundColor: '#67e379ca' }}>
+                                        <Text style={{ color: textColor }}>{item.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true })}</Text>
+                                    </View>
                                 </View>
-                            </View>
-                        ))}
-                    </View>)}
+                            ))}
+                        </View>
+                    )}
 
-
-                    {/* Reminder switch */}
-                    <View
-                        className="flex-1 px-4 py-4 mx-4 my-4 rounded-xl  "
-                        style={{
-                            borderColor: COLORS.border,
-                            backgroundColor: 'white'
-                        }}
-                    >
-                        <View className='flex-row items-center justify-between gap-2'>
-                            <View className="rounded-full p-1 h-12 w-12 items-center justify-center "
-                                style={{ backgroundColor: '#f0f0f0' }}
-                            >
+                    {/* Reminder Switch */}
+                    <View style={{ flex: 1, padding: 16, marginHorizontal: 16, marginVertical: 16, borderRadius: 16, borderWidth: 1, borderColor: borderColor, backgroundColor: cardBg }}>
+                        <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: 8 }}>
+                            <View style={{ borderRadius: 30, padding: 4, height: 48, width: 48, alignItems: 'center', justifyContent: 'center', backgroundColor: '#f0f0f0' }}>
                                 <Ionicons name='notifications' size={25} color={'green'} />
                             </View>
-                            <View className='flex-1'>
-                                <Text
-                                    className='ml-0 font-spaceBold text-xl pl-3'
-                                >
-                                    Reminders
-                                </Text>
-                                <Text
-                                    className='ml-0 font-spaceRegular pl-3'
-                                >
-                                    Get notified when it&apos;s time to take your medicine
-                                </Text>
+                            <View style={{ flex: 1 }}>
+                                <Text style={{ fontFamily: 'SpaceGrotesk-Bold', fontSize: 18, paddingLeft: 12, color: textColor }}>Reminders</Text>
+                                <Text style={{ fontFamily: 'SpaceGrotesk-Regular', paddingLeft: 12, color: subTextColor }}>Get notified when it's time to take your medicine</Text>
                             </View>
-                            <Switch
-                                value={isReminderSwitchOn}
-                                onValueChange={onToggleReminderSwitch}
-                                color='green'
-                            />
+                            <Switch value={isReminderSwitchOn} onValueChange={onToggleReminderSwitch} color='green' />
                         </View>
                     </View>
 
-                    {/* Refill switch */}
-                    <View
-                        className="flex-1 px-4 py-4 mx-4 my-4 rounded-xl  "
-                        style={{
-                            borderColor: COLORS.border,
-                            backgroundColor: 'white'
-                        }}
-                    >
-                        <View className='flex-row items-center justify-between gap-2'>
-                            <View className="rounded-full p-1 h-12 w-12 items-center justify-center "
-                                style={{ backgroundColor: '#f0f0f0' }}
-                            >
+                    {/* Refill Switch */}
+                    <View style={{ flex: 1, padding: 16, marginHorizontal: 16, marginVertical: 16, borderRadius: 16, borderWidth: 1, borderColor: borderColor, backgroundColor: cardBg }}>
+                        <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: 8 }}>
+                            <View style={{ borderRadius: 30, padding: 4, height: 48, width: 48, alignItems: 'center', justifyContent: 'center', backgroundColor: '#f0f0f0' }}>
                                 <Ionicons name='reload-outline' size={25} color={'green'} />
                             </View>
-                            <View className='flex-1'>
-
-                                <Text
-                                    className='ml-0 font-spaceBold text-xl pl-3'
-                                >
-                                    Refill Tracking
-                                </Text>
-                                <Text
-                                    className='ml-0 font-spaceRegular  pl-3'
-                                >
-                                    Get notified when you need to refill
-                                </Text>
+                            <View style={{ flex: 1 }}>
+                                <Text style={{ fontFamily: 'SpaceGrotesk-Bold', fontSize: 18, paddingLeft: 12, color: textColor }}>Refill Tracking</Text>
+                                <Text style={{ fontFamily: 'SpaceGrotesk-Regular', paddingLeft: 12, color: subTextColor }}>Get notified when you need to refill</Text>
                             </View>
-                            <Switch value={isRefillSwitchOn} onValueChange={onToggleRefillSwitch}
-                                color='green'
-                            />
+                            <Switch value={isRefillSwitchOn} onValueChange={onToggleRefillSwitch} color='green' />
                         </View>
                     </View>
-                    <View
-                        className="mx-4 my-4 border-2 rounded-3xl p-2"
-                        style={{
-                            borderColor: COLORS.border,
-                            backgroundColor: 'white'
-                        }}
-                    >
+
+                    {/* Notes */}
+                    <View style={{ marginHorizontal: 16, marginVertical: 16, borderWidth: 2, borderRadius: 30, padding: 8, backgroundColor: cardBg, borderColor: borderColor }}>
                         <TextInput
                             value={note}
                             onChangeText={setNote}
-                            className="font-spaceRegular"
-                            autoCapitalize="none"
-                            keyboardType='default'
                             placeholder="Add notes or special Instructions..."
+                            placeholderTextColor={subTextColor}
                             multiline
                             numberOfLines={4}
-                            style={{ height: 100, textAlignVertical: 'top' }}
+                            style={{ height: 100, textAlignVertical: 'top', color: textColor, fontFamily: 'SpaceGrotesk-Regular' }}
                         />
                     </View>
 
-
                 </ScrollView>
-                <View
-                    className="flex-col justify-between px-4 py-4 bg-white"
-                    style={{
-                        position: 'absolute',
-                        bottom: 0,
-                        left: 0,
-                        right: 0,
-                        borderTopWidth: 1,
-                        borderColor: COLORS.border,
-                        borderTopLeftRadius: 18,
-                        borderTopRightRadius: 18,
-                        gap: 8,
-                    }}
-                >
 
+                {/* Footer Buttons */}
+                <View style={{ position: 'absolute', bottom: 0, left: 0, right: 0, padding: 16, gap: 8, backgroundColor: cardBg, borderTopWidth: 1, borderColor: borderColor, borderTopLeftRadius: 18, borderTopRightRadius: 18 }}>
                     <TouchableOpacity
-                        className=" gap-y-6 bg-green-700 py-4 rounded-xl items-center"
+                        style={{ backgroundColor: '#28a745', paddingVertical: 16, borderRadius: 16, alignItems: 'center' }}
                         onPress={handleSubmit}
                     >
-                        <Text className="text-white font-spaceBold text-lg">Add Medication</Text>
+                        <Text style={{ color: 'white', fontFamily: 'SpaceGrotesk-Bold', fontSize: 18 }}>Add Medication</Text>
                     </TouchableOpacity>
                     <TouchableOpacity
-                        className=" gap-y-6 border-[1.5px] border-red-600  py-3 rounded-xl items-center"
-                        onPress={() => {
-                            resetForm();
-                            router.back()
-                        }}
+                        style={{ borderWidth: 1.5, borderColor: '#dc3545', paddingVertical: 12, borderRadius: 16, alignItems: 'center' }}
+                        onPress={() => { resetForm(); router.back() }}
                     >
-                        <Text className="text-red-600 font-spaceBold text-lg">Cancel</Text>
+                        <Text style={{ color: '#dc3545', fontFamily: 'SpaceGrotesk-Bold', fontSize: 18 }}>Cancel</Text>
                     </TouchableOpacity>
-
                 </View>
             </KeyboardAvoidingView>
-
         </View>
     )
 }

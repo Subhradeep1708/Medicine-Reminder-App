@@ -1,15 +1,18 @@
-import { StyleSheet, Text, View } from 'react-native'
-import React from 'react'
-import { useSafeAreaInsets } from 'react-native-safe-area-context'
-import { COLORS } from '../constants/color'
-import { LinearGradient } from 'expo-linear-gradient'
+import { View } from 'react-native';
+import React, { useContext } from 'react';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { LinearGradient } from 'expo-linear-gradient';
+import { ThemeContext } from '../app/_layout';// your global theme
 
 const SafeScreen = ({ children }) => {
-    const insets = useSafeAreaInsets()
+    const insets = useSafeAreaInsets();
+    const { isDark } = useContext(ThemeContext);
+
     return (
-        <View style={{ flex: 1, paddingTop: 0, backgroundColor: 'transparent' }}>
+        <View style={{ flex: 1, paddingTop: 0, backgroundColor: isDark ? '#121212' : '#fff' }}>
+            {/* Top gradient overlay */}
             <LinearGradient
-                colors={['rgba(0,0,0,0.4)', 'transparent']}
+                colors={isDark ? ['rgba(255,255,255,0.1)', 'transparent'] : ['rgba(0,0,0,0.4)', 'transparent']}
                 style={{
                     position: 'absolute',
                     top: 0,
@@ -21,7 +24,7 @@ const SafeScreen = ({ children }) => {
             />
             {children}
         </View>
-    )
-}
+    );
+};
 
-export default SafeScreen
+export default SafeScreen;
