@@ -1,8 +1,17 @@
 import { View, Text, TouchableOpacity } from 'react-native';
 import React, { useContext } from 'react';
 import { Ionicons } from '@expo/vector-icons';
+import PropTypes from 'prop-types';
 import { ThemeContext } from '../app/_layout'; // import global ThemeContext
 
+/**
+ * MedicineComponent - Displays individual medicine information with take/taken functionality
+ * @param {string} name - Name of the medicine
+ * @param {string} dose - Dosage information
+ * @param {string} time - Time when medicine should be taken
+ * @param {boolean} isTaken - Whether the medicine has been taken
+ * @param {function} onToggle - Callback function when take/taken button is pressed
+ */
 const MedicineComponent = ({ name, dose, time, isTaken, onToggle }) => {
     const { isDark } = useContext(ThemeContext);
 
@@ -29,6 +38,9 @@ const MedicineComponent = ({ name, dose, time, isTaken, onToggle }) => {
                         <TouchableOpacity
                             onPress={onToggle}
                             className='bg-orange-500 p-2 px-6 rounded-2xl'
+                            accessibilityLabel={`Mark ${name} as taken`}
+                            accessibilityHint="Double tap to mark this medicine as taken"
+                            accessibilityRole="button"
                         >
                             <Text className='text-white font-spaceSemiBold'>Take</Text>
                         </TouchableOpacity>
@@ -37,6 +49,9 @@ const MedicineComponent = ({ name, dose, time, isTaken, onToggle }) => {
                             onPress={onToggle}
                             className='p-2 px-6 rounded-2xl flex-row items-center'
                             style={{ backgroundColor: isDark ? '#264d26' : '#e6f4ea' }}
+                            accessibilityLabel={`${name} has been taken`}
+                            accessibilityHint="Double tap to mark this medicine as not taken"
+                            accessibilityRole="button"
                         >
                             <Ionicons name='checkmark-circle' size={18} color={isDark ? '#7ed67e' : 'green'} />
                             <Text className={`${isDark ? 'text-green-300' : 'text-green-500'} font-spaceSemiBold pl-2`}>
@@ -48,6 +63,14 @@ const MedicineComponent = ({ name, dose, time, isTaken, onToggle }) => {
             </View>
         </View>
     );
+};
+
+MedicineComponent.propTypes = {
+    name: PropTypes.string.isRequired,
+    dose: PropTypes.string.isRequired,
+    time: PropTypes.string.isRequired,
+    isTaken: PropTypes.bool.isRequired,
+    onToggle: PropTypes.func.isRequired,
 };
 
 export default MedicineComponent;
