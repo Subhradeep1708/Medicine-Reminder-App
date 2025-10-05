@@ -1,4 +1,4 @@
-import { useSignIn } from '@clerk/clerk-expo'
+import { useSignIn, useOAuth } from '@clerk/clerk-expo'
 import { useRouter } from 'expo-router'
 import { Text, TextInput, TouchableOpacity, View, KeyboardAvoidingView, Platform, ScrollView, Alert } from 'react-native'
 import React from 'react'
@@ -6,9 +6,14 @@ import { Image } from 'expo-image'
 import { COLORS } from "@/constants/color";
 import { Ionicons } from '@expo/vector-icons'
 import { Button } from 'react-native-paper';
+import * as WebBrowser from 'expo-web-browser'
+
+// Complete the OAuth flow
+WebBrowser.maybeCompleteAuthSession()
 
 export default function SignInScreen() {
   const { signIn, setActive, isLoaded } = useSignIn()
+  const { startOAuthFlow } = useOAuth({ strategy: 'oauth_google' })
   const router = useRouter()
 
   const [emailAddress, setEmailAddress] = React.useState('')
@@ -42,6 +47,25 @@ export default function SignInScreen() {
       setLoading(false);
     }
   }
+
+  // Handle Google OAuth sign-in
+  const onGoogleSignIn = React.useCallback(async () => {
+    try {
+      setLoading(true)
+      const { createdSessionId, setActive } = await startOAuthFlow()
+
+      if (createdSessionId) {
+        setActive({ session: createdSessionId })
+      } else {
+        // Use signIn or signUp for next steps such as MFA
+      }
+    } catch (err) {
+      console.error('OAuth error', err)
+      Alert.alert('Sign in failed', 'Please try again')
+    } finally {
+      setLoading(false)
+    }
+  }, [startOAuthFlow])
 
   return (
     <View className="flex-1 pt-8 " style={{ backgroundColor: COLORS.background }}>
@@ -108,10 +132,38 @@ export default function SignInScreen() {
                 style={loading && { opacity: 0.7, backgroundColor: COLORS.textLight }}
               >
                 <Text className="font-spaceSemiBold text-white text-xl items-center">
-                  {0 ? "Signing In..." : "Sign In"}
+                  {loading ? "Signing In..." : "Sign In"}
                 </Text>
               </Button>
+            </View>
 
+            {/* Divider */}
+            <View className="w-[90%] flex-row items-center my-4">
+              <View className="flex-1 h-px bg-gray-300" />
+              <Text className="mx-4 text-gray-500 font-spaceRegular">or</Text>
+              <View className="flex-1 h-px bg-gray-300" />
+            </View>
+
+            {/* Google Sign In Button */}
+            <View className="w-[90%]">
+              <TouchableOpacity
+                onPress={onGoogleSignIn}
+                disabled={loading}
+                className="flex-row items-center justify-center border-2 rounded-3xl p-4 mb-4"
+                style={{ 
+                  borderColor: COLORS.border,
+                  backgroundColor: loading ? '#f0f0f0' : 'white',
+                  opacity: loading ? 0.7 : 1
+                }}
+              >
+                <Image
+                  source={{ uri: 'https://developers.google.com/identity/images/g-logo.png' }}
+                  style={{ width: 24, height: 24, marginRight: 12 }}
+                />
+                <Text className="font-spaceSemiBold text-lg" style={{ color: COLORS.text }}>
+                  {loading ? "Signing in..." : "Continue with Google"}
+                </Text>
+              </TouchableOpacity>
             </View>
             <TouchableOpacity
 

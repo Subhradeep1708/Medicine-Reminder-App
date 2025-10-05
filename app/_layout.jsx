@@ -44,7 +44,10 @@ export default function RootLayout() {
     <ThemeContext.Provider value={{ isDark, toggleTheme }}>
       <PaperProvider theme={theme}>
         
-        <ClerkProvider tokenCache={tokenCache}>
+        <ClerkProvider 
+          publishableKey={process.env.EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY}
+          tokenCache={tokenCache}
+        >
           <SafeScreen>
             {/* StatusBar updates automatically based on theme */}
             <StatusBar style={isDark ? "light" : "dark"} translucent />
