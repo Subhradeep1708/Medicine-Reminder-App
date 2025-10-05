@@ -8,7 +8,8 @@
     "android": "expo start --android",
     "ios": "expo start --ios",
     "web": "expo start --web",
-    "lint": "expo lint"
+    "lint": "expo lint",
+    "test": "jest"
   },
   "dependencies": {
     "@clerk/clerk-expo": "^2.13.2",
@@ -56,11 +57,23 @@
   "devDependencies": {
     "@babel/core": "^7.25.2",
     "@types/react": "~19.0.10",
+    "babel-jest": "^29.7.0",
+    "@babel/preset-env": "^7.25.0",
     "eslint": "^9.25.0",
     "eslint-config-expo": "~9.2.0",
     "prettier-plugin-tailwindcss": "^0.5.14",
     "tailwindcss": "^3.4.17",
-    "typescript": "~5.8.3"
+    "typescript": "~5.8.3",
+    "jest-expo": "^48.0.0"
+  },
+  "jest": {
+    "transform": {
+      "^.+\\.js$": "babel-jest",
+      "^.+\\.ts$": "babel-jest",
+      "^.+\\.tsx$": "babel-jest"
+    },
+    "testEnvironment": "node",
+    "moduleFileExtensions": ["js", "ts", "tsx", "json", "jsx"]
   },
   "private": true
 }
