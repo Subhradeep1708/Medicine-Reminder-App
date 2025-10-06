@@ -1,14 +1,19 @@
 import * as React from 'react'
 import { Alert, KeyboardAvoidingView, Platform, Text, TextInput, TouchableOpacity, View, ScrollView } from 'react-native'
-import { useSignUp } from '@clerk/clerk-expo'
+import { useSignUp, useOAuth } from '@clerk/clerk-expo'
 import { Link, useRouter } from 'expo-router'
 import { COLORS } from "@/constants/color";
 import { Image } from 'expo-image'
 import { Ionicons } from '@expo/vector-icons';
 import { Button } from 'react-native-paper';
+import * as WebBrowser from 'expo-web-browser'
+
+// Complete the OAuth flow
+WebBrowser.maybeCompleteAuthSession()
 
 export default function SignUpScreen() {
     const { isLoaded, signUp, setActive } = useSignUp()
+    const { startOAuthFlow } = useOAuth({ strategy: 'oauth_google' })
     const router = useRouter()
 
     const [email, setEmail] = React.useState('')
@@ -48,6 +53,25 @@ export default function SignUpScreen() {
             setLoading(false)
         }
     }
+
+    // Handle Google OAuth sign-up
+    const onGoogleSignUp = React.useCallback(async () => {
+        try {
+            setLoading(true)
+            const { createdSessionId, setActive } = await startOAuthFlow()
+
+            if (createdSessionId) {
+                setActive({ session: createdSessionId })
+            } else {
+                // Use signIn or signUp for next steps such as MFA
+            }
+        } catch (err) {
+            console.error('OAuth error', err)
+            Alert.alert('Sign up failed', 'Please try again')
+        } finally {
+            setLoading(false)
+        }
+    }, [startOAuthFlow])
 
     // Handle submission of verification form
     const onVerifyPress = async () => {
@@ -202,7 +226,35 @@ export default function SignUpScreen() {
                                     {loading ? "Signing Up..." : "Sign Up"}
                                 </Text>
                             </Button>
+                        </View>
 
+                        {/* Divider */}
+                        <View className="w-[90%] flex-row items-center my-4">
+                            <View className="flex-1 h-px bg-gray-300" />
+                            <Text className="mx-4 text-gray-500 font-spaceRegular">or</Text>
+                            <View className="flex-1 h-px bg-gray-300" />
+                        </View>
+
+                        {/* Google Sign Up Button */}
+                        <View className="w-[90%]">
+                            <TouchableOpacity
+                                onPress={onGoogleSignUp}
+                                disabled={loading}
+                                className="flex-row items-center justify-center border-2 rounded-3xl p-4 mb-4"
+                                style={{ 
+                                    borderColor: COLORS.border,
+                                    backgroundColor: loading ? '#f0f0f0' : 'white',
+                                    opacity: loading ? 0.7 : 1
+                                }}
+                            >
+                                <Image
+                                    source={{ uri: 'https://developers.google.com/identity/images/g-logo.png' }}
+                                    style={{ width: 24, height: 24, marginRight: 12 }}
+                                />
+                                <Text className="font-spaceSemiBold text-lg" style={{ color: COLORS.text }}>
+                                    {loading ? "Signing up..." : "Continue with Google"}
+                                </Text>
+                            </TouchableOpacity>
                         </View>
                         <View style={{ display: 'flex', flexDirection: 'row', gap: 3 }}
 
