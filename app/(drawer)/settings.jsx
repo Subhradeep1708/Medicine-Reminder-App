@@ -12,6 +12,8 @@ import {
 import { Ionicons } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { router } from 'expo-router'; // Import the router object
+import { sendTestNotification } from '@/utils/testNotification';
+import { getAllScheduledNotifications } from '@/utils/notificationManager';
 
 const SettingsScreen = () => {
     const [settings, setSettings] = useState({
@@ -131,6 +133,26 @@ const SettingsScreen = () => {
         );
     };
 
+    const handleTestNotification = async () => {
+        const result = await sendTestNotification();
+        if (result.success) {
+            Alert.alert('Success', 'Test notification scheduled! You will receive it in 2 seconds.');
+        } else {
+            Alert.alert('Error', 'Failed to send test notification. Please check permissions.');
+        }
+    };
+
+    const handleViewScheduledNotifications = async () => {
+        const scheduled = await getAllScheduledNotifications();
+        Alert.alert(
+            'Scheduled Notifications',
+            scheduled.length > 0 
+                ? `You have ${scheduled.length} scheduled notification(s).`
+                : 'No scheduled notifications found.',
+            [{ text: 'OK' }]
+        );
+    };
+
     const SettingItem = ({ icon, title, subtitle, rightComponent, onPress }) => (
         <TouchableOpacity style={styles.settingItem} onPress={onPress}>
             <View style={styles.settingLeft}>
@@ -188,6 +210,26 @@ const SettingsScreen = () => {
                             trackColor={{ false: '#ccc', true: '#4CAF50' }}
                             thumbColor={settings.notifications ? '#fff' : '#f4f3f4'}
                         />
+                    }
+                />
+
+                <SettingItem
+                    icon="send-outline"
+                    title="Test Notification"
+                    subtitle="Send a test notification"
+                    onPress={handleTestNotification}
+                    rightComponent={
+                        <Ionicons name="chevron-forward" size={20} color="#999" />
+                    }
+                />
+
+                <SettingItem
+                    icon="list-outline"
+                    title="View Scheduled"
+                    subtitle="See all scheduled notifications"
+                    onPress={handleViewScheduledNotifications}
+                    rightComponent={
+                        <Ionicons name="chevron-forward" size={20} color="#999" />
                     }
                 />
 

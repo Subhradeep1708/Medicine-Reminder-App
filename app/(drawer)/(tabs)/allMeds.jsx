@@ -8,6 +8,7 @@ import { useContext } from 'react';
 
 const AllMeds = () => {
   const medicines = useMedicineStore((state) => state.medicines);
+  const toggleTaken = useMedicineStore((state) => state.toggleTaken);
   const { isDark } = useContext(ThemeContext);
 
   // Dynamic colors
@@ -16,6 +17,7 @@ const AllMeds = () => {
   const textColor = '#ffffff'; // header text remains white
   const iconBg = isDark ? '#2c2c2c' : '#ffffff'; // button background in dark mode
   const iconColor = isDark ? '#81c784' : '#127207'; // icon color
+  const emptyTextColor = isDark ? '#aaaaaa' : '#666666';
 
   return (
     <View style={{ flex: 1, backgroundColor: bgColor }}>
@@ -37,14 +39,26 @@ const AllMeds = () => {
 
       {/* Medicines List */}
       <ScrollView className='p-4'>
-        {medicines.map((med, index) => (
-          <MedicineComponent
-            key={index}
-            medicine={med}
-            toggleTaken={med.toggleTaken}
-            darkMode={isDark} // pass dark mode prop to MedicineComponent if it supports styling
-          />
-        ))}
+        {medicines.length === 0 ? (
+          <View style={{ alignItems: 'center', justifyContent: 'center', paddingVertical: 60 }}>
+            <MaterialIcons name="medication" size={64} color={emptyTextColor} />
+            <Text style={{ color: emptyTextColor, fontSize: 16, marginTop: 16, fontFamily: 'SpaceGrotesk-Regular' }}>
+              No medications added yet
+            </Text>
+          </View>
+        ) : (
+          medicines.map((med) => (
+            <MedicineComponent
+              key={med.id}
+              name={med.name}
+              dose={med.dose}
+              time={med.time.join(' & ')}
+              isTaken={med.isTaken}
+              onToggle={() => toggleTaken(med.id)}
+              darkMode={isDark}
+            />
+          ))
+        )}
       </ScrollView>
     </View>
   );
