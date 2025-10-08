@@ -1,4 +1,4 @@
-import { ScrollView, Text, View } from "react-native";
+import { ScrollView, Text, View, TouchableOpacity } from "react-native";
 import "../../../global.css"
 import CircularProgressBar from '@/components/CircularProgressBar'
 import { Ionicons } from '@expo/vector-icons';
@@ -9,8 +9,9 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { useNavigation } from 'expo-router';
 import DrawerButton from "@/components/DrawerButton";
 import useMedicineStore from "@/store/medicineStore";
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { ThemeContext } from "../../_layout"; // make sure path is correct
+import NotificationModal from "@/components/NotificationModal";
 
 const Home = () => {
   const navigation = useNavigation();
@@ -19,6 +20,12 @@ const Home = () => {
 
   const medicines = useMedicineStore((state) => state.medicines);
   const toggleTaken = useMedicineStore((state) => state.toggleTaken);
+  const notifications = useMedicineStore((state) => state.notifications);
+  
+  const [notificationModalVisible, setNotificationModalVisible] = useState(false);
+
+  // Count unread notifications
+  const unreadCount = notifications.filter((n) => !n.read).length;
 
   // Dynamic colors based on theme
   const bgColor = isDark ? "#121212" : COLORS.background;
@@ -40,17 +47,46 @@ const Home = () => {
         <View className=" w-full flex-row justify-between p-4 " >
           <DrawerButton />
           <Text className="font-spaceBold text-2xl" style={{ color: "#fff" }}>Daily Progress</Text>
-          <View className="rounded-lg" style={{
-            backgroundColor: 'rgba(255, 255, 255, 0.3)',
-            padding: 5,
-            borderRadius: 10,
-            margin: 2
-          }}>
+          <TouchableOpacity 
+            onPress={() => setNotificationModalVisible(true)}
+            className="rounded-lg" 
+            style={{
+              backgroundColor: 'rgba(255, 255, 255, 0.3)',
+              padding: 5,
+              borderRadius: 10,
+              margin: 2,
+              position: 'relative',
+            }}
+          >
             <Ionicons name="notifications-outline" size={27} color={"white"} />
-          </View>
+            {unreadCount > 0 && (
+              <View style={{
+                position: 'absolute',
+                top: -4,
+                right: -4,
+                backgroundColor: '#dc3545',
+                borderRadius: 10,
+                minWidth: 20,
+                height: 20,
+                alignItems: 'center',
+                justifyContent: 'center',
+                paddingHorizontal: 4,
+              }}>
+                <Text style={{ color: 'white', fontSize: 10, fontWeight: 'bold', fontFamily: 'SpaceGrotesk-Bold' }}>
+                  {unreadCount > 99 ? '99+' : unreadCount}
+                </Text>
+              </View>
+            )}
+          </TouchableOpacity>
         </View>
         <CircularProgressBar />
       </View>
+
+      {/* Notification Modal */}
+      <NotificationModal 
+        visible={notificationModalVisible} 
+        onClose={() => setNotificationModalVisible(false)} 
+      />
 
       {/* Quick Action Section */}
       <Text className="mt-6 font-spaceBold text-2xl p-4" style={{ color: textColor }}>Quick Actions</Text>

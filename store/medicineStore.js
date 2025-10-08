@@ -6,6 +6,8 @@ const useMedicineStore = create(
     persist(
         (set) => ({
             medicines: [],
+            notifications: [],
+            
             addMedicine: (medicine) =>
                 set((state) => ({
                     medicines: [...state.medicines, medicine],
@@ -21,6 +23,31 @@ const useMedicineStore = create(
                     )
                 })),
             clearAll: () => set({ medicines: [] }),
+            
+            // Notification actions
+            addNotification: (notification) =>
+                set((state) => ({
+                    notifications: [notification, ...state.notifications],
+                })),
+            markNotificationAsRead: (id) =>
+                set((state) => ({
+                    notifications: state.notifications.map((notif) =>
+                        notif.id === id ? { ...notif, read: true } : notif
+                    ),
+                })),
+            markAllNotificationsAsRead: () =>
+                set((state) => ({
+                    notifications: state.notifications.map((notif) => ({
+                        ...notif,
+                        read: true,
+                    })),
+                })),
+            clearAllNotifications: () =>
+                set({ notifications: [] }),
+            removeNotification: (id) =>
+                set((state) => ({
+                    notifications: state.notifications.filter((notif) => notif.id !== id),
+                })),
         }),
         {
             name: 'medicine-storage',

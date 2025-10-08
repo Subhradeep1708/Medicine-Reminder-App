@@ -7,6 +7,7 @@ import SafeScreen from "../components/SafeScreen";
 import { ClerkProvider } from "@clerk/clerk-expo";
 import { tokenCache } from "@clerk/clerk-expo/token-cache";
 import { PaperProvider, MD3LightTheme, MD3DarkTheme } from "react-native-paper";
+import { requestNotificationPermissions, setupNotificationListeners, removeNotificationListeners } from "../utils/notificationManager";
 
 // ✅ ThemeContext to share dark/light mode across the app
 export const ThemeContext = createContext({
@@ -30,6 +31,30 @@ export default function RootLayout() {
 
   // React Native Paper theme
   const theme = isDark ? MD3DarkTheme : MD3LightTheme;
+
+  // Initialize notifications
+  useEffect(() => {
+    let subscriptions;
+
+    const initializeNotifications = async () => {
+      // Request permissions
+      const hasPermission = await requestNotificationPermissions();
+      
+      if (hasPermission) {
+        // Setup listeners
+        subscriptions = setupNotificationListeners();
+      }
+    };
+
+    initializeNotifications();
+
+    // Cleanup on unmount
+    return () => {
+      if (subscriptions) {
+        removeNotificationListeners(subscriptions);
+      }
+    };
+  }, []);
 
   // Hide splash screen once fonts are loaded
   useEffect(() => {

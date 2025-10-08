@@ -30,6 +30,7 @@
     "expo-image": "~2.3.0",
     "expo-linear-gradient": "~14.1.5",
     "expo-linking": "~7.1.5",
+    "expo-notifications": "^0.32.12",
     "expo-router": "~5.1.0",
     "expo-secure-store": "^14.2.3",
     "expo-splash-screen": "~0.30.9",
@@ -57,15 +58,15 @@
   },
   "devDependencies": {
     "@babel/core": "^7.25.2",
+    "@babel/preset-env": "^7.25.0",
     "@types/react": "~19.0.10",
     "babel-jest": "^29.7.0",
-    "@babel/preset-env": "^7.25.0",
     "eslint": "^9.25.0",
     "eslint-config-expo": "~9.2.0",
+    "jest-expo": "^48.0.0",
     "prettier-plugin-tailwindcss": "^0.5.14",
     "tailwindcss": "^3.4.17",
-    "typescript": "~5.8.3",
-    "jest-expo": "^48.0.0"
+    "typescript": "~5.8.3"
   },
   "jest": {
     "transform": {
@@ -74,7 +75,13 @@
       "^.+\\.tsx$": "babel-jest"
     },
     "testEnvironment": "node",
-    "moduleFileExtensions": ["js", "ts", "tsx", "json", "jsx"]
+    "moduleFileExtensions": [
+      "js",
+      "ts",
+      "tsx",
+      "json",
+      "jsx"
+    ]
   },
   "private": true
 }

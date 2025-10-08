@@ -10,6 +10,8 @@ import { Switch } from 'react-native-paper'
 import { nanoid } from 'nanoid/non-secure'
 import useMedicineStore from '@/store/medicineStore'
 import { ThemeContext } from '../_layout' // import your ThemeContext
+import { scheduleMedicineNotifications } from '@/utils/notificationManager'
+import { Alert } from 'react-native'
 
 const MedicationScreen = () => {
     const { addMedicine } = useMedicineStore();
@@ -52,9 +54,9 @@ const MedicationScreen = () => {
         setNote('');
     };
 
-    const handleSubmit = () => {
+    const handleSubmit = async () => {
         if (!name.trim() || !dose.trim() || sliderValue <= 0 || time.length === 0) {
-            alert("Please fill out all required fields.");
+            Alert.alert("Missing Information", "Please fill out all required fields.");
             return;
         }
 
@@ -69,8 +71,40 @@ const MedicationScreen = () => {
             isReminder: isReminderSwitchOn,
             isRefill: isRefillSwitchOn,
             note,
-            isTaken: false
+            isTaken: false,
+            notificationIds: [],
         };
+
+        // Schedule notifications if reminders are enabled
+        if (isReminderSwitchOn) {
+            try {
+                const notificationIds = await scheduleMedicineNotifications(newMedicine);
+                newMedicine.notificationIds = notificationIds;
+                
+                if (notificationIds.length > 0) {
+                    Alert.alert(
+                        "Success", 
+                        `Medication added! ${notificationIds.length} reminder(s) scheduled.`,
+                        [{ text: "OK" }]
+                    );
+                } else {
+                    Alert.alert(
+                        "Success", 
+                        "Medication added, but no reminders were scheduled (check if times are in the future).",
+                        [{ text: "OK" }]
+                    );
+                }
+            } catch (error) {
+                console.error("Error scheduling notifications:", error);
+                Alert.alert(
+                    "Partial Success", 
+                    "Medication added, but there was an error scheduling reminders.",
+                    [{ text: "OK" }]
+                );
+            }
+        } else {
+            Alert.alert("Success", "Medication added successfully!", [{ text: "OK" }]);
+        }
 
         addMedicine(newMedicine);
         resetForm();

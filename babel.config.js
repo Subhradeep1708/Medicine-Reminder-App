@@ -4,8 +4,7 @@ module.exports = function (api) {
   return {
     presets: [
       ["babel-preset-expo", { jsxImportSource: "nativewind" }],
-      "nativewind/babel",
-      "@babel/preset-env"
+      "nativewind/babel"
     ],
     env: {
       production: {
@@ -16,8 +15,13 @@ module.exports = function (api) {
         // do NOT include 'react-native-reanimated/plugin' in test
       }
     },
-    plugins: process.env.JEST_WORKER_ID === undefined 
-      ? ['react-native-reanimated/plugin'] 
-      : []
+    plugins: [
+      ["@babel/plugin-transform-class-properties", { "loose": true }],
+      ["@babel/plugin-transform-private-methods", { "loose": true }],
+      ["@babel/plugin-transform-private-property-in-object", { "loose": true }],
+      ...(process.env.JEST_WORKER_ID === undefined 
+        ? ['react-native-reanimated/plugin'] 
+        : [])
+    ]
   };
 };
