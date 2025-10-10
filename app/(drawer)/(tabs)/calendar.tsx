@@ -33,8 +33,8 @@ const Calendar = () => {
       </View>
 
       {/* Calendar Component */}
-      <View className="p-4">
-        <CalenderComponent darkMode={isDark} /> {/* Pass dark mode prop to your calendar */}
+      <View style={{ flex: 1 }}>
+        <CalenderComponent />
       </View>
     </View>
   );
