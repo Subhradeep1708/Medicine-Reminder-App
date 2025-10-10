@@ -100,13 +100,44 @@
 
 <h2 id="features">✨ Features</h2>
 
-- 📱 Built with React Native and optimized for Android (iOS support coming soon).
-- ⏰ Real time noficitaion & add multiple medication times with 12-hour format display.
-- 🧪 Set dosage and duration with slider control.
-- 📝 Add custom notes or special instructions.
-- 🔔 Enable/disable reminders and refill tracking with toggle switches.
-- 📆 Date & time picker with native UI integration.
-- 🧭 Clean, modern interface with intuitive layout and fixed action buttons.
+### 💊 Medication Management
+- 📱 Built with React Native and optimized for Android (iOS support coming soon)
+- ⏰ Real-time notifications with multiple medication times (12-hour format)
+- 🧪 Set dosage and duration with intuitive slider control
+- 📝 Add custom notes or special instructions for each medication
+- 🔔 Enable/disable reminders and refill tracking with toggle switches
+- 📆 Date & time picker with native UI integration
+- 🧭 Clean, modern interface with intuitive layout and fixed action buttons
+
+### 📅 Advanced Calendar Features
+- 📊 **Visual Medication Timeline**: See your entire medication schedule at a glance
+  - Color-coded date ranges for each medication
+  - Distinct colors for up to 8 concurrent medications
+  - Clear start and end day indicators
+- 📈 **Smart Statistics Dashboard**: 
+  - Active medications count for today
+  - Total medications in system
+  - Completed medication courses
+  - Upcoming medication schedules
+- 🎯 **Interactive Date Selection**: 
+  - Tap any date to view detailed medication information
+  - See dosage, times, frequency, and notes
+  - Empty state notifications for medication-free days
+- 🌓 **Full Dark Mode Support**: Optimized themes for day and night use
+- 📱 **Responsive Design**: Adapts seamlessly to all screen sizes
+- 🔍 **Legend & Indicators**: 
+  - Today marker with green dot
+  - Medication dots for scheduled dates
+  - Color-coded period backgrounds
+
+### 🔔 Notification System
+- 🎯 **Smart Scheduling Algorithm**: Intelligent reminder system based on medication schedule
+- 📜 **Notification History**: Persistent storage of all notifications with modal view
+- 🔕 **Notification Actions**: Mark as read, delete individual, or clear all
+- 🏷️ **Badge Count**: Visual indicator on home screen notification icon
+- ⚡ **Background & Foreground Handling**: Works seamlessly in all app states
+- 🎨 **Modern UI**: Animated notification modal with blur effects
+- 🧪 **Test Notifications**: Built-in feature to test notification delivery
 
 <img src="https://user-images.githubusercontent.com/73097560/115834477-dbab4500-a447-11eb-908a-139a6edaec5c.gif" width="100%">
 
