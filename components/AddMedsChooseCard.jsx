@@ -1,6 +1,5 @@
 import { Ionicons } from '@expo/vector-icons'
-import { router } from 'expo-router'
-import { useState, useContext } from 'react'
+import { useContext } from 'react'
 import { View, Text, TouchableOpacity } from 'react-native'
 import { ThemeContext } from '../app/_layout' // import global theme
 

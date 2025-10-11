@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { Alert, KeyboardAvoidingView, Platform, Text, TextInput, TouchableOpacity, View, ScrollView } from 'react-native'
 import { useSignUp, useOAuth } from '@clerk/clerk-expo'
-import { Link, useRouter } from 'expo-router'
+import { Link } from 'expo-router'
 import { COLORS } from "@/constants/color";
 import { Image } from 'expo-image'
 import { Ionicons } from '@expo/vector-icons';
@@ -14,7 +14,6 @@ WebBrowser.maybeCompleteAuthSession()
 export default function SignUpScreen() {
     const { isLoaded, signUp, setActive } = useSignUp()
     const { startOAuthFlow } = useOAuth({ strategy: 'oauth_google' })
-    const router = useRouter()
 
     const [email, setEmail] = React.useState('')
     const [password, setPassword] = React.useState('')
