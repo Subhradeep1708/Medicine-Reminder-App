@@ -99,7 +99,7 @@ const SettingsScreen = () => {
                         try {
                             await AsyncStorage.removeItem('medications');
                             Alert.alert('Success', 'All medication data has been cleared');
-                        } catch (error) {
+                        } catch (_error) {
                             Alert.alert('Error', 'Failed to clear data');
                         }
                     },

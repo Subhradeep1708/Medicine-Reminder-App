@@ -56,7 +56,7 @@ const NotificationModal = ({ visible, onClose }) => {
         useNativeDriver: true,
       }).start();
     }
-  }, [visible, dimensions.width]);
+  }, [visible, dimensions.width, slideAnim]);
 
   const handleMarkAsRead = (id) => {
     markNotificationAsRead(id);
@@ -100,9 +100,6 @@ const NotificationModal = ({ visible, onClose }) => {
   // Responsive calculations
   const modalWidth = Math.min(dimensions.width * 0.95, 450);
   const modalHeight = dimensions.height * 0.85;
-  const isSmallScreen = dimensions.width < 375;
-  const paddingSize = isSmallScreen ? 12 : 16;
-  const fontSize = isSmallScreen ? 14 : 16;
 
   return (
     <Modal
@@ -182,7 +179,7 @@ const NotificationModal = ({ visible, onClose }) => {
                   No notifications yet
                 </Text>
                 <Text style={[styles.emptySubText, { color: subTextColor }]}>
-                  You'll see notifications here when you receive them
+                  You&apos;ll see notifications here when you receive them
                 </Text>
               </View>
             ) : (

@@ -1,4 +1,4 @@
-import { View, Text, KeyboardAvoidingView, ScrollView, TouchableOpacity, TextInput, Platform } from 'react-native'
+import { View, Text, KeyboardAvoidingView, ScrollView, TouchableOpacity, TextInput, Platform, Alert } from 'react-native'
 import { useState, useContext } from 'react'
 import { COLORS } from '@/constants/color'
 import { Ionicons, MaterialIcons } from '@expo/vector-icons'
@@ -11,7 +11,6 @@ import { nanoid } from 'nanoid/non-secure'
 import useMedicineStore from '@/store/medicineStore'
 import { ThemeContext } from '../_layout' // import your ThemeContext
 import { scheduleMedicineNotifications } from '@/utils/notificationManager'
-import { Alert } from 'react-native'
 
 const MedicationScreen = () => {
     const { addMedicine } = useMedicineStore();
@@ -277,7 +276,7 @@ const MedicationScreen = () => {
                             </View>
                             <View style={{ flex: 1 }}>
                                 <Text style={{ fontFamily: 'SpaceGrotesk-Bold', fontSize: 18, paddingLeft: 12, color: textColor }}>Reminders</Text>
-                                <Text style={{ fontFamily: 'SpaceGrotesk-Regular', paddingLeft: 12, color: subTextColor }}>Get notified when it's time to take your medicine</Text>
+                                <Text style={{ fontFamily: 'SpaceGrotesk-Regular', paddingLeft: 12, color: subTextColor }}>Get notified when it&apos;s time to take your medicine</Text>
                             </View>
                             <Switch value={isReminderSwitchOn} onValueChange={onToggleReminderSwitch} color='green' />
                         </View>
