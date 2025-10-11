@@ -1,5 +1,5 @@
-import { View, Text, TouchableOpacity } from 'react-native';
-import React, { useContext } from 'react';
+import { View, Text, TouchableOpacity, Animated } from 'react-native';
+import React, { useContext, useRef, useEffect } from 'react';
 import { Ionicons } from '@expo/vector-icons';
 import PropTypes from 'prop-types';
 import { ThemeContext } from '../app/_layout'; // import global ThemeContext
@@ -14,11 +14,53 @@ import { ThemeContext } from '../app/_layout'; // import global ThemeContext
  */
 const MedicineComponent = ({ name, dose, time, isTaken, onToggle }) => {
     const { isDark } = useContext(ThemeContext);
+    const scaleAnim = useRef(new Animated.Value(1)).current;
+    const opacityAnim = useRef(new Animated.Value(1)).current;
+
+    useEffect(() => {
+        if (isTaken) {
+            Animated.parallel([
+                Animated.timing(scaleAnim, {
+                    toValue: 0.98,
+                    duration: 200,
+                    useNativeDriver: true,
+                }),
+                Animated.timing(opacityAnim, {
+                    toValue: 0.7,
+                    duration: 200,
+                    useNativeDriver: true,
+                })
+            ]).start();
+        } else {
+            Animated.parallel([
+                Animated.timing(scaleAnim, {
+                    toValue: 1,
+                    duration: 200,
+                    useNativeDriver: true,
+                }),
+                Animated.timing(opacityAnim, {
+                    toValue: 1,
+                    duration: 200,
+                    useNativeDriver: true,
+                })
+            ]).start();
+        }
+    }, [isTaken, scaleAnim, opacityAnim]);
 
     return (
-        <View className={`flex-row py-4 rounded-xl mx-4 my-2 items-center ${isDark ? 'bg-gray-800' : 'bg-white'}`}>
-            <View className='bg-orange-100 p-3 ml-5 rounded-full'>
-                <Ionicons name="medical" size={28} color="orange" />
+        <Animated.View 
+            style={{
+                transform: [{ scale: scaleAnim }],
+                opacity: opacityAnim
+            }}
+            className={`flex-row py-4 rounded-xl mx-4 my-2 items-center shadow-sm ${isDark ? 'bg-gray-800' : 'bg-white'} ${isTaken ? 'border-2 border-green-200' : ''}`}
+        >
+            <View className={`${isTaken ? 'bg-green-100' : 'bg-orange-100'} p-3 ml-5 rounded-full`}>
+                <Ionicons 
+                    name={isTaken ? "checkmark-circle" : "medical"} 
+                    size={28} 
+                    color={isTaken ? "#16a34a" : "#ea580c"} 
+                />
             </View>
 
             <View className='flex-1 flex-row justify-between items-center px-4'>
@@ -61,7 +103,7 @@ const MedicineComponent = ({ name, dose, time, isTaken, onToggle }) => {
                     )}
                 </View>
             </View>
-        </View>
+        </Animated.View>
     );
 };
 
