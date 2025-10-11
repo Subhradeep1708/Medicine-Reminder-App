@@ -62,17 +62,24 @@ const Home = () => {
             {unreadCount > 0 && (
               <View style={{
                 position: 'absolute',
-                top: -4,
-                right: -4,
-                backgroundColor: '#dc3545',
-                borderRadius: 10,
-                minWidth: 20,
-                height: 20,
+                top: -6,
+                right: -6,
+                backgroundColor: '#ef4444',
+                borderRadius: 12,
+                minWidth: 24,
+                height: 24,
                 alignItems: 'center',
                 justifyContent: 'center',
-                paddingHorizontal: 4,
+                paddingHorizontal: 6,
+                borderWidth: 2,
+                borderColor: 'white',
+                shadowColor: '#000',
+                shadowOffset: { width: 0, height: 2 },
+                shadowOpacity: 0.25,
+                shadowRadius: 3.84,
+                elevation: 5,
               }}>
-                <Text style={{ color: 'white', fontSize: 10, fontWeight: 'bold', fontFamily: 'SpaceGrotesk-Bold' }}>
+                <Text style={{ color: 'white', fontSize: 11, fontWeight: 'bold', fontFamily: 'SpaceGrotesk-Bold' }}>
                   {unreadCount > 99 ? '99+' : unreadCount}
                 </Text>
               </View>
